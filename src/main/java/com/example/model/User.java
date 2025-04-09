@@ -1,4 +1,4 @@
-package com.example.graduation.model;
+package com.example.model;
 
 public record User(String firstName, String lastName, int yearOfBirth, int monthOfBirth, int dayOfBirth) {
 

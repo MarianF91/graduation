@@ -1,4 +1,4 @@
-package com.example.graduation.utils;
+package com.example.utils;
 
 import java.time.DateTimeException;
 import java.time.LocalDate;

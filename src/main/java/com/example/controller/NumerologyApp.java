@@ -1,10 +1,10 @@
-package com.example.graduation.controller;
+package com.example.controller;
 
-import com.example.graduation.model.NumerologyProfile;
-import com.example.graduation.model.User;
-import com.example.graduation.service.InputService;
-import com.example.graduation.service.NumerologyService;
-import com.example.graduation.utils.ResultPrinter;
+import com.example.model.NumerologyProfile;
+import com.example.model.User;
+import com.example.service.InputService;
+import com.example.service.NumerologyService;
+import com.example.utils.ResultPrinter;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication

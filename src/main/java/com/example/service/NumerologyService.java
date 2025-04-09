@@ -1,8 +1,8 @@
-package com.example.graduation.service;
+package com.example.service;
 
-import com.example.graduation.utils.NumerologyCalculator;
-import com.example.graduation.model.NumerologyProfile;
-import com.example.graduation.model.User;
+import com.example.model.NumerologyProfile;
+import com.example.model.User;
+import com.example.utils.NumerologyCalculator;
 
 public class NumerologyService {
     public NumerologyProfile profileGenerator(User user) {

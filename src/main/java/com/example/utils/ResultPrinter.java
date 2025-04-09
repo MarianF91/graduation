@@ -1,7 +1,8 @@
-package com.example.graduation.utils;
+package com.example.utils;
 
-import com.example.graduation.model.NumerologyProfile;
-import com.example.graduation.model.User;
+
+import com.example.model.NumerologyProfile;
+import com.example.model.User;
 
 public class ResultPrinter {
     public static void printProfile(NumerologyProfile profile, User user) {

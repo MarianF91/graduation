@@ -1,10 +1,10 @@
-package com.example.graduation.service;
+package com.example.service;
 
+import com.example.model.NumerologyProfile;
+import com.example.model.User;
+import com.example.utils.NumerologyCalculator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import com.example.graduation.model.NumerologyProfile;
-import com.example.graduation.model.User;
-import com.example.graduation.utils.NumerologyCalculator;
 
 public class NumerologyServiceTest {
 

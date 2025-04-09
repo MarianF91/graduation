@@ -1,4 +1,4 @@
-package com.example.graduation.model;
+package com.example.model;
 
 public class NumerologyProfile {
     private final int destinyNumber;

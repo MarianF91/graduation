@@ -1,6 +1,4 @@
-package com.example.graduation.service;
-
-import static org.junit.jupiter.api.Assertions.*;
+package com.example.service;
 
 class InputServiceTest {
 
