@@ -1,11 +1,27 @@
 package com.example.model;
 
-public record User(String firstName, String lastName, int yearOfBirth, int monthOfBirth, int dayOfBirth) {
+import jakarta.persistence.*;
+import lombok.*;
 
-    //date of birth validation
-    public boolean isValidDate() {
-        return yearOfBirth >= 1000 && yearOfBirth <= 9999 &&
-                monthOfBirth >= 1 && monthOfBirth <= 12 &&
-                dayOfBirth >= 1 && dayOfBirth <= 31;
+@Entity
+@Table(name = "users")
+@Getter @Setter
+@NoArgsConstructor @AllArgsConstructor
+public class User {
+
+    @Id @GeneratedValue
+    private Long id;
+
+    private String firstName;
+    private String lastName;
+
+    private int birthYear;
+    private int birthMonth;
+    private int birthDay;
+
+    // for test purposes
+    public User(String firstName, String lastName,
+                int birthYear, int birthMonth, int birthDay) {
+        this(null, firstName, lastName, birthYear, birthMonth, birthDay);
     }
 }

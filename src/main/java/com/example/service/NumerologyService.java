@@ -2,27 +2,39 @@ package com.example.service;
 
 import com.example.model.NumerologyProfile;
 import com.example.model.User;
+import com.example.repository.ProfileRepository;
+import com.example.repository.UserRepository;
 import com.example.utils.NumerologyCalculator;
+import org.springframework.stereotype.Service;
 
+import java.util.List;
+
+@Service
 public class NumerologyService {
-    public NumerologyProfile profileGenerator(User user) {
-        String fullName = user.firstName() + " " + user.lastName();
 
-        int destiny = NumerologyCalculator.calculateDestinyNumber(user.yearOfBirth(),
-                user.monthOfBirth(), user.dayOfBirth());
-        int soul = NumerologyCalculator.calculateSoulNumber(user.dayOfBirth());
-        int personality = NumerologyCalculator.calculatePersonalityNumber(user.monthOfBirth());
-        int maturity = NumerologyCalculator.calculateMaturityNumber(destiny, personality);
-        int expression = NumerologyCalculator.calculateExpressionNumber(fullName);
+    private final UserRepository userRepository;
+    private final ProfileRepository profileRepository;
 
-        String destinyDescription = NumerologyCalculator.getDestinyDescription(destiny);
-        String soulDescription = NumerologyCalculator.getSoulDescription(soul);
-        String personalityDescription = NumerologyCalculator.getPersonalityDescription(personality);
-        String maturityDescription = NumerologyCalculator.getMaturityDescription(maturity);
-        String expressionDescription = NumerologyCalculator.getExpressionDescription(expression);
+    public NumerologyService(UserRepository userRepository, ProfileRepository profileRepository) {
+        this.userRepository = userRepository;
+        this.profileRepository = profileRepository;
+    }
 
-        return new NumerologyProfile(destiny, soul, personality, maturity, expression,
-                user.yearOfBirth(), destinyDescription, soulDescription, personalityDescription,
-                maturityDescription, expressionDescription);
+    public NumerologyProfile generateAndSaveProfile(User user) {
+        userRepository.save(user);
+
+        NumerologyProfile profile = NumerologyCalculator.generateProfile(user);
+        profile.setUser(user);
+
+        return profileRepository.save(profile);
+    }
+
+    public NumerologyProfile findProfile(Long id) {
+        return profileRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Profile not found"));
+    }
+
+    public List<NumerologyProfile> findAllProfiles() {
+        return profileRepository.findAll();
     }
 }

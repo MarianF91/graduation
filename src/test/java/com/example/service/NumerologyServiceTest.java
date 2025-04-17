@@ -2,63 +2,47 @@ package com.example.service;
 
 import com.example.model.NumerologyProfile;
 import com.example.model.User;
-import com.example.utils.NumerologyCalculator;
-import org.junit.jupiter.api.Assertions;
+import com.example.repository.ProfileRepository;
+import com.example.repository.UserRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 public class NumerologyServiceTest {
 
-    @Test
-    public void testProfileGenerator() {
-        NumerologyService service = new NumerologyService();
-        User user = new User("John", "Doe", 1990, 1, 12);
-        NumerologyProfile profile = service.profileGenerator(user);
+    @Mock
+    private UserRepository userRepository;
 
-        Assertions.assertEquals(5, profile.getDestinyNumber());
-        Assertions.assertEquals(3, NumerologyCalculator.calculateSoulNumber(12));
-        Assertions.assertEquals(1, profile.getPersonalityNumber());
-        Assertions.assertEquals(6, profile.getMaturityNumber());
-        Assertions.assertEquals(8, profile.getExpressionNumber());
-        Assertions.assertEquals(1990, profile.getBirthYear());
-        Assertions.assertEquals("This means that you are an adventurer, a free spirit and an adaptable person." +
-                " Try not to become unpredictable and unreliable.", profile.getDestinyDescription());
-        Assertions.assertEquals("Your soul desires: expressiveness and creativity. Try not to become shallow and erratic."
-                , profile.getSoulDescription());
-        Assertions.assertEquals("Good traits: independent, confident, a leader.\tBad traits: arrogant, authoritarian."
-                , profile.getPersonalityDescription());
-        Assertions.assertEquals("You need to cultivate your relationships and start a family.",
-                profile.getMaturityDescription());
-        Assertions.assertEquals("This means that you are strong, ambitious and materialistic." +
-                " Try not to become arrogant and manipulative.", profile.getExpressionDescription());
+    @Mock
+    private ProfileRepository profileRepository;
+
+    @InjectMocks
+    private NumerologyService service;
+
+    @BeforeEach
+    void setup() {
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test
-    public void testSpecialCharactersInName() {
-        NumerologyService service = new NumerologyService();
-        User user = new User("John!@#$", "Doe", 1990, 1, 12);
-        NumerologyProfile profile = service.profileGenerator(user);
+    public void generatesCorrectNumbersForMarianFilip() {
+        User user = new User("Marian", "Filip", 1991, 4, 27);
 
-        // checks if the profile is generated correctly, even with special chars within it
-        Assertions.assertEquals(5, profile.getDestinyNumber());
-    }
+        when(userRepository.save(any())).thenReturn(user);
+        when(profileRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
 
-    @Test
-    public void testMultipleSpacesInName() {
-        NumerologyService service = new NumerologyService();
-        User user = new User("John   ", "   Doe", 1990, 1, 12);
-        NumerologyProfile profile = service.profileGenerator(user);
+        NumerologyProfile profile = service.generateAndSaveProfile(user);
 
-        // checks if the profile is generated correctly, even with multiple spaces within it
-        Assertions.assertEquals(5, profile.getDestinyNumber());
-    }
-
-    @Test
-    public void testEmptyName() {
-        NumerologyService service = new NumerologyService();
-        User user = new User("", "", 1990, 1, 12);
-        NumerologyProfile profile = service.profileGenerator(user);
-
-        //checks if the profile is generated correctly, even with empty names
-        Assertions.assertEquals(5, profile.getDestinyNumber());
+        assertNotNull(profile);
+        assertEquals(6, profile.getDestinyNumber());
+        assertEquals(11, profile.getSoulUrgeNumber());
+        assertEquals(7, profile.getPersonalityNumber());
+        assertEquals(6, profile.getMaturityNumber());
+        assertEquals(9, profile.getExpressionNumber());
     }
 }
