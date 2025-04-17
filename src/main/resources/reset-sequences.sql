@@ -1,0 +1,5 @@
+TRUNCATE TABLE numerology_profile CASCADE;
+TRUNCATE TABLE users CASCADE;
+
+ALTER SEQUENCE users_id_seq RESTART WITH 1;
+ALTER SEQUENCE numerology_profile_id_seq RESTART WITH 1;

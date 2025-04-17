@@ -1,40 +1,20 @@
 package com.example.service;
 
-import com.example.model.NumerologyProfile;
-import com.example.model.User;
-import com.example.repository.ProfileRepository;
-import com.example.repository.UserRepository;
-import com.example.utils.NumerologyCalculator;
-import org.springframework.stereotype.Service;
+import com.example.dto.NumerologyProfileResponse;
+import com.example.dto.UserDto;
 
 import java.util.List;
 
-@Service
-public class NumerologyService {
+public interface NumerologyService {
 
-    private final UserRepository userRepository;
-    private final ProfileRepository profileRepository;
+    NumerologyProfileResponse generateAndSaveProfile(UserDto dto);
 
-    public NumerologyService(UserRepository userRepository, ProfileRepository profileRepository) {
-        this.userRepository = userRepository;
-        this.profileRepository = profileRepository;
-    }
+    NumerologyProfileResponse findProfile(Long id);
 
-    public NumerologyProfile generateAndSaveProfile(User user) {
-        userRepository.save(user);
+    List<NumerologyProfileResponse> findAllProfiles();
 
-        NumerologyProfile profile = NumerologyCalculator.generateProfile(user);
-        profile.setUser(user);
+    void deleteProfile(Long id);
 
-        return profileRepository.save(profile);
-    }
+    NumerologyProfileResponse updateProfile(Long id, UserDto dto);
 
-    public NumerologyProfile findProfile(Long id) {
-        return profileRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Profile not found"));
-    }
-
-    public List<NumerologyProfile> findAllProfiles() {
-        return profileRepository.findAll();
-    }
 }

@@ -63,7 +63,7 @@ VALUES (1, 'maturity', 'In maturity, you become a confident and inspiring leader
        (9, 'maturity', 'You live with compassion, purpose, and service to humanity.')
 ON CONFLICT (number, type) DO NOTHING;
 
--- Master numbers
+-- MASTER NUMBERS
 INSERT INTO numerology_meaning (number, type, description)
 VALUES (11, 'destiny', 'You are intuitive, idealistic, and spiritually aware.'),
        (11, 'soulUrge', 'You are a visionary and deeply spiritual.'),

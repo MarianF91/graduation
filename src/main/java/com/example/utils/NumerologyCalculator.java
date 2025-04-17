@@ -71,5 +71,4 @@ public class NumerologyCalculator {
     public static int calculateMaturityNumber(int destinyNumber, int lifePathNumber) {
         return reduceToSingleDigit(destinyNumber + lifePathNumber);
     }
-
 }
