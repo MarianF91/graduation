@@ -81,7 +81,7 @@ public class NumerologyServiceImpl implements NumerologyService {
         ));
 
         NumerologyProfile updatedProfile = NumerologyCalculator.generateProfile(updatedUser);
-        updatedProfile.setId(id); // păstrăm același ID
+        updatedProfile.setId(id);
         updatedProfile.setUser(updatedUser);
         profileRepository.save(updatedProfile);
 

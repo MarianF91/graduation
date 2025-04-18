@@ -77,7 +77,7 @@ public class NumerologyControllerTest {
         ResponseEntity<List<NumerologyProfileResponse>> result = controller.getAllProfiles();
 
         assertEquals(200, result.getStatusCode().value());
-        assertEquals(1, result.getBody().size());
+        assertEquals(1, Objects.requireNonNull(result.getBody()).size());
     }
 
     @Test

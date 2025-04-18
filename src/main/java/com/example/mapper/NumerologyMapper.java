@@ -1,10 +1,8 @@
 package com.example.mapper;
 
 import com.example.dto.NumerologyProfileResponse;
-import com.example.dto.UserDto;
 import com.example.model.MeaningType;
 import com.example.model.NumerologyProfile;
-import com.example.model.User;
 import com.example.service.MeaningService;
 import org.springframework.stereotype.Component;
 
@@ -15,16 +13,6 @@ public class NumerologyMapper {
 
     public NumerologyMapper(MeaningService meaningService) {
         this.meaningService = meaningService;
-    }
-
-    public User toEntity(UserDto dto) {
-        return new User(
-                dto.firstName(),
-                dto.lastName(),
-                dto.birthYear(),
-                dto.birthMonth(),
-                dto.birthDay()
-        );
     }
 
     public NumerologyProfileResponse toDto(NumerologyProfile profile) {

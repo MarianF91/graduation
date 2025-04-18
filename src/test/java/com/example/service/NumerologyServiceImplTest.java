@@ -31,8 +31,6 @@ class NumerologyServiceImplTest {
     @Mock
     private MeaningService meaningService;
 
-    private NumerologyMapper mapper;
-
     @InjectMocks
     private NumerologyServiceImpl service;
 
@@ -45,7 +43,7 @@ class NumerologyServiceImplTest {
         MockitoAnnotations.openMocks(this);
 
         // Init mapper cu meaningService
-        mapper = new NumerologyMapper(meaningService);
+        NumerologyMapper mapper = new NumerologyMapper(meaningService);
         service = new NumerologyServiceImpl(userRepository, profileRepository, mapper);
 
         dto = new UserDto("Ana", "Pop", 1990, 5, 15);
