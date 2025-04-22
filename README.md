@@ -11,7 +11,6 @@ Technologies Used
 - **PostgreSQL**
 - **Maven**
 - **JUnit 5 & Mockito**
-- **Swagger UI (OpenAPI)**
 - **Postman** (manual testing)
 
 Key Features
@@ -46,11 +45,12 @@ Possible Extensions
 
 Quick Demo (Postman)
 - POST http://localhost:8080/api/profile; Content-Type: application/json;
-- GET http://localhost:8080/api/users
+- GET (all users) http://localhost:8080/api/users
 - GET http://localhost:8080/api/profile/get-meaning?number=6&type=destiny
 - DELETE http://localhost:8080/api/profile/{id}
-- PUT http://localhost:8080/api/profile/{id}; Content-Type: application/json
-- 
+- PUT (user update) http://localhost:8080/api/profile/{id}; Content-Type: application/json
+- GET (all profiles) http://localhost:8080/api/profile/all
+- GET (specific profile) http://localhost:8080/api/profile/{id}
 Database Reset (For Testing)
 
 To reset the database and ensure ID sequences start from 1:
