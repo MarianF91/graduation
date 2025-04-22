@@ -29,14 +29,14 @@ class NumerologyIntegrationTest {
         String json = mapper.writeValueAsString(dto);
 
         // when / then
-        mvc.perform(post("/api/profiles")
+        mvc.perform(post("/api/numerology")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 // basic sanity checks on JSON body:
                 .andExpect(jsonPath("$.firstName").value("Marian"))
                 .andExpect(jsonPath("$.lastName").value("Filip"))
-                .andExpect(jsonPath("$.destiny.number").value(6))
+                .andExpect(jsonPath("$.destiny.number").value(33))
                 .andExpect(jsonPath("$.soulUrge.number").value(11))
                 .andExpect(jsonPath("$.personality.number").value(7))
                 .andExpect(jsonPath("$.expression.number").value(9))

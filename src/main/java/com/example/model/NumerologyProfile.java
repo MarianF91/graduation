@@ -5,30 +5,22 @@ import lombok.*;
 
 @Entity
 @Table(name = "numerology_profile")
-@Getter
-@Setter
+@Getter @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 public class NumerologyProfile {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_gen")
-    @SequenceGenerator(name = "user_gen", sequenceName = "users_id_seq", allocationSize = 1)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "user_id")
+
+    @ManyToOne(optional = false)
     private User user;
+
     private int destinyNumber;
+    private int lifePathNumber;
+    private int expressionNumber;
     private int soulUrgeNumber;
     private int personalityNumber;
+    private int birthdayNumber;
     private int maturityNumber;
-    private int expressionNumber;
-
-    public NumerologyProfile(int destiny, int soulUrge, int personality, int expression, int maturity) {
-        this.destinyNumber = destiny;
-        this.soulUrgeNumber = soulUrge;
-        this.personalityNumber = personality;
-        this.expressionNumber = expression;
-        this.maturityNumber = maturity;
-    }
+    private int balanceNumber;
+    private int lessonNumber;
 }

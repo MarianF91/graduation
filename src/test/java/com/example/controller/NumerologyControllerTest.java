@@ -13,52 +13,56 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
 
-import java.util.Objects;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class NumerologyControllerUnitTest {
+class NumerologyControllerTest {
 
-    @Mock
-    private NumerologyService numerologyService;
-    @Mock
-    private MeaningService meaningService;
-
-    @InjectMocks
-    private NumerologyController controller;
-
-    @Test
-    void createProfile_returnsExpected() {
-        var dto = new UserDto("Marian","Filip",1991,4,27);
-        var profile = new NumerologyProfileResponse(
-                1L,
-                new ProfileDto(6, "M6"),
-                new ProfileDto(11,"M11"),
-                new ProfileDto(7,"M7"),
-                new ProfileDto(9,"M9"),
-                new ProfileDto(6,"M6b"),
-                "Marian","Filip"
-        );
-        when(numerologyService.generateAndSaveProfile(dto)).thenReturn(profile);
-
-        ResponseEntity<NumerologyProfileResponse> resp = controller.create(dto);
-
-        assertEquals(200, resp.getStatusCode().value());
-        assertEquals(6, Objects.requireNonNull(resp.getBody()).destiny().number());
-        verify(numerologyService).generateAndSaveProfile(dto);
-    }
+    @Mock private MeaningService meaningService;
+    @Mock private NumerologyService numerologyService;
+    @InjectMocks private NumerologyController controller;
 
     @Test
     void getMeaning_returnsProfileDto() {
-        when(meaningService.getMeaning(6, MeaningType.DESTINY)).thenReturn("Balanced");
+        int number = 6;
+        MeaningType type = MeaningType.LIFE_PATH;
+        when(meaningService.getMeaning(number, type)).thenReturn("Balanced");
 
-        ResponseEntity<ProfileDto> resp = controller.getMeaning(6, MeaningType.DESTINY);
+        ResponseEntity<ProfileDto> resp = controller.getMeaning(number, type);
 
         assertEquals(200, resp.getStatusCode().value());
-        assertEquals(6, Objects.requireNonNull(resp.getBody()).number());
-        assertEquals("Balanced", resp.getBody().meaning());
-        verify(meaningService).getMeaning(6, MeaningType.DESTINY);
+        ProfileDto body = resp.getBody();
+        assertNotNull(body);
+        assertEquals(6, body.number());
+        assertEquals("Balanced", body.meaning());
+        verify(meaningService).getMeaning(number, type);
+    }
+
+    @Test
+    void createProfile_returnsCreatedBody() {
+        var dto = new UserDto("Marian","Filip",1991,4,27);
+        var response = new NumerologyProfileResponse(
+                1L,
+                new ProfileDto(6,"M6"),    
+                new ProfileDto(33,"M33"),
+                new ProfileDto(5,"M5"),
+                new ProfileDto(11,"M11"),
+                new ProfileDto(7,"M7"),
+                new ProfileDto(27,"Bday"),
+                new ProfileDto(1,"Mat"),
+                new ProfileDto(3,"Bal"),
+                new ProfileDto(2,"Les"),
+                "Marian", "Filip"
+        );
+
+
+        when(numerologyService.calculateProfile(dto)).thenReturn(response);
+
+        ResponseEntity<NumerologyProfileResponse> resp = controller.create(dto);
+
+        assertEquals(201, resp.getStatusCode().value());
+        assertSame(response, resp.getBody());
+        verify(numerologyService).calculateProfile(dto);
     }
 }

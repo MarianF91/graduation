@@ -31,7 +31,11 @@ CREATE TABLE numerology_profile
     soul_urge_number   INT    NOT NULL,
     personality_number INT    NOT NULL,
     expression_number  INT    NOT NULL,
-    maturity_number    INT    NOT NULL
+    maturity_number    INT    NOT NULL,
+    balance_number     INT    NOT NULL,
+    birthday_number    INT    NOT NULL,
+    lesson_number      INT    NOT NULL,
+    life_path_number   INT    NOT NULL
 );
 
 -- Create numerology_meaning table (for meanings)

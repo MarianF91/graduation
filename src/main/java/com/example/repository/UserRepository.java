@@ -7,5 +7,10 @@ import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByFirstNameAndLastNameAndBirthYearAndBirthMonthAndBirthDay(
-            String firstName, String lastName, int birthYear, int birthMonth, int birthDay);
+            String firstName,
+            String lastName,
+            int birthYear,
+            int birthMonth,
+            int birthDay
+    );
 }

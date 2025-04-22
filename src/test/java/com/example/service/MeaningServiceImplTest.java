@@ -27,24 +27,27 @@ class MeaningServiceImplTest {
 
     @Test
     void returnsMeaningIfFound() {
-        NumerologyMeaning mockMeaning = new NumerologyMeaning();
-        mockMeaning.setDescription("You are a leader.");
+        NumerologyMeaning mockMeaning = new NumerologyMeaning(
+                5,
+                MeaningType.LIFE_PATH,
+                "You follow your life road with passion."
+        );
 
-        when(repository.findByIdNumberAndIdType(1, MeaningType.DESTINY))
+        when(repository.findByNumberAndType(5, MeaningType.LIFE_PATH))
                 .thenReturn(Optional.of(mockMeaning));
 
-        String result = service.getMeaning(1, MeaningType.DESTINY);
+        String result = service.getMeaning(5, MeaningType.LIFE_PATH);
 
-        assertEquals("You are a leader.", result);
+        assertEquals("You follow your life road with passion.", result);
     }
 
     @Test
     void returnsFallbackMessageIfNotFound() {
-        when(repository.findByIdNumberAndIdType(99, MeaningType.MATURITY))
+        when(repository.findByNumberAndType(13, MeaningType.LESSON))
                 .thenReturn(Optional.empty());
 
-        String result = service.getMeaning(99, MeaningType.MATURITY);
+        String result = service.getMeaning(13, MeaningType.LESSON);
 
-        assertEquals("No meaning found for 99 (MATURITY)", result);
+        assertEquals("No meaning found for 13 (LESSON)", result);
     }
 }

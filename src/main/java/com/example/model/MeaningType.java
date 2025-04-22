@@ -1,19 +1,22 @@
 package com.example.model;
 
+import lombok.Getter;
+
+@Getter
 public enum MeaningType {
-    DESTINY("destiny"),
-    SOUL_URGE("soulUrge"),
-    PERSONALITY("personality"),
+    LIFE_PATH("life_path"),
     EXPRESSION("expression"),
-    MATURITY("maturity");
+    SOUL_URGE("soul_urge"),
+    PERSONALITY("personality"),
+    BIRTHDAY("birthday"),
+    MATURITY("maturity"),
+    BALANCE("balance"),
+    LESSON("lesson"),
+    DESTINY("destiny");
 
     private final String dbValue;
 
     MeaningType(String dbValue) {
         this.dbValue = dbValue;
-    }
-
-    public String dbValue() {
-        return dbValue;
     }
 }

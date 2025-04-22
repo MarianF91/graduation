@@ -1,31 +1,36 @@
 package com.example.model;
 
-import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 
-@Embeddable
-@Access(AccessType.FIELD)
-@Getter @Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@Setter
+@Getter
 public class NumerologyMeaningId implements Serializable {
+    public NumerologyMeaningId() {
+    }
 
-    @Column(name = "number")
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     private int number;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "type")
     private MeaningType type;
+
+    public NumerologyMeaningId(int number, MeaningType type) {
+        this.number = number;
+        this.type = type;
+    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof NumerologyMeaningId that)) return false;
-        return number == that.number && type == that.type;
+        return number == that.number && Objects.equals(type, that.type);
     }
+
 
     @Override
     public int hashCode() {
