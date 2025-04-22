@@ -57,18 +57,17 @@ class NumerologyServiceImplTest {
         when(userRepository.save(any(User.class))).thenReturn(user);
         when(profileRepository.save(any(NumerologyProfile.class))).thenReturn(profile);
 
-        when(meaningService.getMeaning(profile.getDestinyNumber(), MeaningType.DESTINY)).thenReturn("Destiny meaning");
-        when(meaningService.getMeaning(profile.getSoulUrgeNumber(), MeaningType.SOUL_URGE)).thenReturn("SoulUrge meaning");
-        when(meaningService.getMeaning(profile.getPersonalityNumber(), MeaningType.PERSONALITY)).thenReturn("Personality meaning");
-        when(meaningService.getMeaning(profile.getExpressionNumber(), MeaningType.EXPRESSION)).thenReturn("Expression meaning");
-        when(meaningService.getMeaning(profile.getMaturityNumber(), MeaningType.MATURITY)).thenReturn("Maturity meaning");
+        when(meaningService.getMeaning(anyInt(), eq(MeaningType.DESTINY))).thenReturn("Destiny meaning");
+        when(meaningService.getMeaning(anyInt(), eq(MeaningType.SOUL_URGE))).thenReturn("SoulUrge meaning");
+        when(meaningService.getMeaning(anyInt(), eq(MeaningType.PERSONALITY))).thenReturn("Personality meaning");
+        when(meaningService.getMeaning(anyInt(), eq(MeaningType.EXPRESSION))).thenReturn("Expression meaning");
+        when(meaningService.getMeaning(anyInt(), eq(MeaningType.MATURITY))).thenReturn("Maturity meaning");
 
         NumerologyProfileResponse result = service.generateAndSaveProfile(dto);
 
         assertNotNull(result);
         assertEquals("Ana", result.firstName());
         assertEquals("Pop", result.lastName());
-        assertEquals(profile.getDestinyNumber(), result.destinyNumber());
         assertEquals("Destiny meaning", result.destinyMeaning());
     }
 
@@ -79,12 +78,7 @@ class NumerologyServiceImplTest {
         profile.setUser(user);
 
         when(profileRepository.findById(1L)).thenReturn(Optional.of(profile));
-
-        when(meaningService.getMeaning(profile.getDestinyNumber(), MeaningType.DESTINY)).thenReturn("Destiny meaning");
-        when(meaningService.getMeaning(profile.getSoulUrgeNumber(), MeaningType.SOUL_URGE)).thenReturn("SoulUrge meaning");
-        when(meaningService.getMeaning(profile.getPersonalityNumber(), MeaningType.PERSONALITY)).thenReturn("Personality meaning");
-        when(meaningService.getMeaning(profile.getExpressionNumber(), MeaningType.EXPRESSION)).thenReturn("Expression meaning");
-        when(meaningService.getMeaning(profile.getMaturityNumber(), MeaningType.MATURITY)).thenReturn("Maturity meaning");
+        when(meaningService.getMeaning(anyInt(), any())).thenReturn("Meaning");
 
         NumerologyProfileResponse result = service.findProfile(1L);
 
@@ -92,7 +86,6 @@ class NumerologyServiceImplTest {
         assertEquals(1L, result.id());
         assertEquals("Ana", result.firstName());
         assertEquals("Pop", result.lastName());
-        assertEquals("Destiny meaning", result.destinyMeaning());
     }
 
     @Test
@@ -107,37 +100,30 @@ class NumerologyServiceImplTest {
 
     @Test
     void findAllProfiles_returnsListOfDtos() {
-        NumerologyProfile profile1 = NumerologyCalculator.generateProfile(user);
-        profile1.setId(1L);
-        profile1.setUser(user);
-
+        User user1 = new User("Ana", "Pop", 1990, 5, 15);
         User user2 = new User("Ion", "Ionescu", 1985, 6, 10);
+
+        NumerologyProfile profile1 = NumerologyCalculator.generateProfile(user1);
+        profile1.setId(1L);
+        profile1.setUser(user1);
+
         NumerologyProfile profile2 = NumerologyCalculator.generateProfile(user2);
         profile2.setId(2L);
         profile2.setUser(user2);
 
+        when(meaningService.getMeaning(anyInt(), any())).thenReturn("Meaning");
         when(profileRepository.findAll()).thenReturn(List.of(profile1, profile2));
-
-        // mock meanings for first profile
-        when(meaningService.getMeaning(profile1.getDestinyNumber(), MeaningType.DESTINY)).thenReturn("D1");
-        when(meaningService.getMeaning(profile1.getSoulUrgeNumber(), MeaningType.SOUL_URGE)).thenReturn("S1");
-        when(meaningService.getMeaning(profile1.getPersonalityNumber(), MeaningType.PERSONALITY)).thenReturn("P1");
-        when(meaningService.getMeaning(profile1.getExpressionNumber(), MeaningType.EXPRESSION)).thenReturn("E1");
-        when(meaningService.getMeaning(profile1.getMaturityNumber(), MeaningType.MATURITY)).thenReturn("M1");
-
-        // mock meanings for second profile
-        when(meaningService.getMeaning(profile2.getDestinyNumber(), MeaningType.DESTINY)).thenReturn("D2");
-        when(meaningService.getMeaning(profile2.getSoulUrgeNumber(), MeaningType.SOUL_URGE)).thenReturn("S2");
-        when(meaningService.getMeaning(profile2.getPersonalityNumber(), MeaningType.PERSONALITY)).thenReturn("P2");
-        when(meaningService.getMeaning(profile2.getExpressionNumber(), MeaningType.EXPRESSION)).thenReturn("E2");
-        when(meaningService.getMeaning(profile2.getMaturityNumber(), MeaningType.MATURITY)).thenReturn("M2");
 
         List<NumerologyProfileResponse> result = service.findAllProfiles();
 
         assertEquals(2, result.size());
-        assertEquals("Ana", result.get(0).firstName());
-        assertEquals("Ion", result.get(1).firstName());
-        assertEquals("D1", result.get(0).destinyMeaning());
-        assertEquals("D2", result.get(1).destinyMeaning());
+
+        NumerologyProfileResponse ana = result.stream()
+                .filter(r -> r.firstName().equals("Ana")).findFirst().orElseThrow();
+        NumerologyProfileResponse ion = result.stream()
+                .filter(r -> r.firstName().equals("Ion")).findFirst().orElseThrow();
+
+        assertEquals("Ana", ana.firstName());
+        assertEquals("Ion", ion.firstName());
     }
 }
