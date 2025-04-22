@@ -1,60 +1,51 @@
 package com.example.controller;
 
-import com.example.model.User;
-import com.example.repository.UserRepository;
+import com.example.dto.UserDto;
+import com.example.service.UserService;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean; //marked for deprecation; will be replaced by @ReplaceWithMock
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
+import java.util.Objects;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(UserController.class)
+@ExtendWith(MockitoExtension.class)
 class UserControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+    @Mock
+    private UserService userService;
 
-    @MockBean //marked for deprecation; will be replaced by @ReplaceWithMock
-    private UserRepository userRepository;
+    @InjectMocks
+    private UserController controller;
 
     @Test
-    void getAllUsers_returnsList() throws Exception {
-        User user1 = new User("Ana", "Pop", 1990, 5, 15);
-        User user2 = new User("Ion", "Ionescu", 1988, 3, 22);
-        when(userRepository.findAll()).thenReturn(List.of(user1, user2));
+    void getAllUsers_returnsList() {
+        var u1 = new UserDto("Ana","Pop",1990,5,15);
+        var u2 = new UserDto("Ion","Ionescu",1988,3,22);
+        when(userService.findAllUsers()).thenReturn(List.of(u1, u2));
 
-        mockMvc.perform(get("/api/users"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(2))
-                .andExpect(jsonPath("$[0].firstName").value("Ana"))
-                .andExpect(jsonPath("$[1].firstName").value("Ion"));
+        ResponseEntity<List<UserDto>> resp = controller.getAllUsers();
+
+        assertEquals(200, resp.getStatusCode().value());
+        assertEquals(2, Objects.requireNonNull(resp.getBody()).size());
+        assertEquals("Ana", resp.getBody().getFirst().firstName());
     }
 
     @Test
-    void createUser_savesAndReturnsUser() throws Exception {
-        User user = new User("Maria", "Enescu", 1995, 6, 10);
-        when(userRepository.save(any(User.class))).thenReturn(user);
+    void createUser_returnsDto() {
+        var input = new UserDto("Maria","Enescu",1995,6,10);
+        when(userService.createUser(input)).thenReturn(input);
 
-        mockMvc.perform(post("/api/users")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("""
-                                {
-                                  "firstName": "Maria",
-                                  "lastName": "Enescu",
-                                  "birthYear": 1995,
-                                  "birthMonth": 6,
-                                  "birthDay": 10
-                                }
-                                """))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.firstName").value("Maria"))
-                .andExpect(jsonPath("$.lastName").value("Enescu"));
+        ResponseEntity<UserDto> resp = controller.createUser(input);
+
+        assertEquals(200, resp.getStatusCode().value());
+        assertEquals("Maria", Objects.requireNonNull(resp.getBody()).firstName());
+        verify(userService).createUser(input);
     }
 }

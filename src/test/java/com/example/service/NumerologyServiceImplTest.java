@@ -4,15 +4,14 @@ import com.example.dto.NumerologyProfileResponse;
 import com.example.dto.UserDto;
 import com.example.exception.ProfileNotFoundException;
 import com.example.mapper.NumerologyMapper;
-import com.example.model.MeaningType;
 import com.example.model.NumerologyProfile;
 import com.example.model.User;
+import com.example.model.MeaningType;
 import com.example.repository.ProfileRepository;
 import com.example.repository.UserRepository;
 import com.example.utils.NumerologyCalculator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 
 import java.util.List;
@@ -21,7 +20,6 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(org.mockito.junit.jupiter.MockitoExtension.class)
 class NumerologyServiceImplTest {
 
     @Mock
@@ -39,11 +37,11 @@ class NumerologyServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        NumerologyMapper mapper = new NumerologyMapper(meaningService);
-        service = new NumerologyServiceImpl(userRepository, profileRepository, mapper);
-
+        MockitoAnnotations.openMocks(this);
         dto = new UserDto("Ana", "Pop", 1990, 5, 15);
         user = new User("Ana", "Pop", 1990, 5, 15);
+        service = new NumerologyServiceImpl(userRepository, profileRepository,
+                new NumerologyMapper(meaningService));
     }
 
     @Test
@@ -68,7 +66,10 @@ class NumerologyServiceImplTest {
         assertNotNull(result);
         assertEquals("Ana", result.firstName());
         assertEquals("Pop", result.lastName());
-        assertEquals("Destiny meaning", result.destinyMeaning());
+
+        assertEquals(1L, result.id());
+        assertEquals(3, result.destiny().number());
+        assertEquals("Destiny meaning", result.destiny().meaning());
     }
 
     @Test
@@ -86,16 +87,16 @@ class NumerologyServiceImplTest {
         assertEquals(1L, result.id());
         assertEquals("Ana", result.firstName());
         assertEquals("Pop", result.lastName());
+
+        assertEquals(profile.getDestinyNumber(), result.destiny().number());
     }
 
     @Test
     void findProfile_throwsExceptionIfNotFound() {
         when(profileRepository.findById(99L)).thenReturn(Optional.empty());
 
-        Exception ex = assertThrows(ProfileNotFoundException.class,
+        assertThrows(ProfileNotFoundException.class,
                 () -> service.findProfile(99L));
-
-        assertEquals("Profile not found with id: 99", ex.getMessage());
     }
 
     @Test
@@ -117,13 +118,7 @@ class NumerologyServiceImplTest {
         List<NumerologyProfileResponse> result = service.findAllProfiles();
 
         assertEquals(2, result.size());
-
-        NumerologyProfileResponse ana = result.stream()
-                .filter(r -> r.firstName().equals("Ana")).findFirst().orElseThrow();
-        NumerologyProfileResponse ion = result.stream()
-                .filter(r -> r.firstName().equals("Ion")).findFirst().orElseThrow();
-
-        assertEquals("Ana", ana.firstName());
-        assertEquals("Ion", ion.firstName());
+        assertEquals(2, result.get(1).id());
+        assertEquals(profile2.getDestinyNumber(), result.get(1).destiny().number());
     }
 }

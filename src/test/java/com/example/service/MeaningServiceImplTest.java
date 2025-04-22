@@ -30,7 +30,7 @@ class MeaningServiceImplTest {
         NumerologyMeaning mockMeaning = new NumerologyMeaning();
         mockMeaning.setDescription("You are a leader.");
 
-        when(repository.findByNumberAndType(1, MeaningType.DESTINY.dbValue()))
+        when(repository.findByIdNumberAndIdType(1, MeaningType.DESTINY))
                 .thenReturn(Optional.of(mockMeaning));
 
         String result = service.getMeaning(1, MeaningType.DESTINY);
@@ -40,7 +40,7 @@ class MeaningServiceImplTest {
 
     @Test
     void returnsFallbackMessageIfNotFound() {
-        when(repository.findByNumberAndType(99, MeaningType.MATURITY.dbValue()))
+        when(repository.findByIdNumberAndIdType(99, MeaningType.MATURITY))
                 .thenReturn(Optional.empty());
 
         String result = service.getMeaning(99, MeaningType.MATURITY);

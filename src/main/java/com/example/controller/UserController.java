@@ -1,7 +1,8 @@
 package com.example.controller;
 
-import com.example.model.User;
-import com.example.repository.UserRepository;
+import com.example.dto.UserDto;
+import com.example.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,20 +12,22 @@ import java.util.List;
 @RequestMapping("/api/users")
 public class UserController {
 
-    private final UserRepository userRepository;
+    private final UserService userService;
 
-    public UserController(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
+    @Operation(summary = "Return all users")
     @GetMapping
-    public ResponseEntity<List<User>> getAllUsers() {
-        return ResponseEntity.ok(userRepository.findAll());
+    public ResponseEntity<List<UserDto>> getAllUsers() {
+        return ResponseEntity.ok(userService.findAllUsers());
     }
 
+    @Operation(summary = "Create new user")
     @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        User saved = userRepository.save(user);
-        return ResponseEntity.ok(saved);
+    public ResponseEntity<UserDto> createUser(@RequestBody UserDto dto) {
+        UserDto created = userService.createUser(dto);
+        return ResponseEntity.ok(created);
     }
 }

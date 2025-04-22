@@ -31,30 +31,40 @@ public class NumerologyServiceImpl implements NumerologyService {
 
     @Override
     public NumerologyProfileResponse generateAndSaveProfile(UserDto dto) {
-        Optional<User> optionalUser = userRepository.findByFirstNameAndLastNameAndBirthYearAndBirthMonthAndBirthDay(
-                dto.firstName(), dto.lastName(), dto.birthYear(), dto.birthMonth(), dto.birthDay());
+        Optional<User> optionalUser = userRepository
+                .findByFirstNameAndLastNameAndBirthYearAndBirthMonthAndBirthDay(
+                        dto.firstName(), dto.lastName(),
+                        dto.birthYear(), dto.birthMonth(), dto.birthDay()
+                );
 
-        User user = optionalUser.orElseGet(() -> userRepository.save(
-                new User(dto.firstName(), dto.lastName(), dto.birthYear(), dto.birthMonth(), dto.birthDay())
-        ));
+        User user = optionalUser.orElseGet(() ->
+                userRepository.save(new User(
+                        dto.firstName(), dto.lastName(),
+                        dto.birthYear(), dto.birthMonth(), dto.birthDay()
+                ))
+        );
 
         NumerologyProfile profile = NumerologyCalculator.generateProfile(user);
         profile.setUser(user);
-        profileRepository.save(profile);
 
-        return numerologyMapper.toDto(profile);
+        NumerologyProfile savedProfile = profileRepository.save(profile);
+
+        return numerologyMapper.toDto(savedProfile);
     }
 
     @Override
     public NumerologyProfileResponse findProfile(Long id) {
         NumerologyProfile profile = profileRepository.findById(id)
-                .orElseThrow(() -> new ProfileNotFoundException("Profile not found with id: " + id));
+                .orElseThrow(() ->
+                        new ProfileNotFoundException("Profile not found with id: " + id)
+                );
         return numerologyMapper.toDto(profile);
     }
 
     @Override
     public List<NumerologyProfileResponse> findAllProfiles() {
-        return profileRepository.findAll().stream()
+        return profileRepository.findAll()
+                .stream()
                 .map(numerologyMapper::toDto)
                 .toList();
     }
@@ -70,21 +80,21 @@ public class NumerologyServiceImpl implements NumerologyService {
     @Override
     public NumerologyProfileResponse updateProfile(Long id, UserDto dto) {
         NumerologyProfile existing = profileRepository.findById(id)
-                .orElseThrow(() -> new ProfileNotFoundException("Profile not found with id: " + id));
+                .orElseThrow(() ->
+                        new ProfileNotFoundException("Profile not found with id: " + id)
+                );
 
         User updatedUser = userRepository.save(new User(
-                dto.firstName(),
-                dto.lastName(),
-                dto.birthYear(),
-                dto.birthMonth(),
-                dto.birthDay()
+                dto.firstName(), dto.lastName(),
+                dto.birthYear(), dto.birthMonth(), dto.birthDay()
         ));
 
         NumerologyProfile updatedProfile = NumerologyCalculator.generateProfile(updatedUser);
         updatedProfile.setId(id);
         updatedProfile.setUser(updatedUser);
-        profileRepository.save(updatedProfile);
 
-        return numerologyMapper.toDto(updatedProfile);
+        NumerologyProfile savedUpdated = profileRepository.save(updatedProfile);
+
+        return numerologyMapper.toDto(savedUpdated);
     }
 }

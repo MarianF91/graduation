@@ -43,15 +43,13 @@ Possible Extensions
 - Track user history
 - Add login system (user/admin roles)
 
-Quick Demo (Postman)
-- POST http://localhost:8080/api/profile; Content-Type: application/json;
-- GET (all users) http://localhost:8080/api/users
-- GET http://localhost:8080/api/profile/get-meaning?number=6&type=destiny
-- DELETE http://localhost:8080/api/profile/{id}
-- PUT (user update) http://localhost:8080/api/profile/{id}; Content-Type: application/json
-- GET (all profiles) http://localhost:8080/api/profile/all
-- GET (specific profile) http://localhost:8080/api/profile/{id}
-Database Reset (For Testing)
+Quick Demo
+
+- **Swagger UI**: http://localhost:8080/swagger-ui.html
+- **API docs**:     http://localhost:8080/v3/api-docs
+- **Create profile**: POST http://localhost:8080/api/profiles
+- **List users**:    GET  http://localhost:8080/api/users
+- **Get meaning**:   GET  http://localhost:8080/api/profiles/meanings?number=6&type=DESTINY
 
 To reset the database and ensure ID sequences start from 1:
 

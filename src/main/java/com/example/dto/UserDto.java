@@ -22,5 +22,4 @@ public record UserDto(
         @Min(value = 1, message = "Day must be between 1 and 31")
         @Max(value = 31, message = "Day must be between 1 and 31")
         int birthDay
-) {
-}
+) { }

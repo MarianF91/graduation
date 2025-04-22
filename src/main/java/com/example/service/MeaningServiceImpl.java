@@ -16,7 +16,7 @@ public class MeaningServiceImpl implements MeaningService {
 
     @Override
     public String getMeaning(int number, MeaningType type) {
-        return repository.findByNumberAndType(number, type.dbValue())
+        return repository.findByIdNumberAndIdType(number, type)
                 .map(NumerologyMeaning::getDescription)
                 .orElse("No meaning found for " + number + " (" + type + ")");
     }

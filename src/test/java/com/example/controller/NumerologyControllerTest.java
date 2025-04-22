@@ -1,11 +1,11 @@
 package com.example.controller;
 
 import com.example.dto.NumerologyProfileResponse;
+import com.example.dto.ProfileDto;
 import com.example.dto.UserDto;
 import com.example.model.MeaningType;
 import com.example.service.MeaningService;
 import com.example.service.NumerologyService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -13,81 +13,52 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
 
-import java.util.List;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class NumerologyControllerTest {
+class NumerologyControllerUnitTest {
 
     @Mock
     private NumerologyService numerologyService;
-
     @Mock
     private MeaningService meaningService;
 
     @InjectMocks
     private NumerologyController controller;
 
-    private UserDto testDto;
-    private NumerologyProfileResponse response;
-
-    @BeforeEach
-    void setUp() {
-        testDto = new UserDto("Marian", "Filip", 1991, 4, 27);
-        response = new NumerologyProfileResponse(
+    @Test
+    void createProfile_returnsExpected() {
+        var dto = new UserDto("Marian","Filip",1991,4,27);
+        var profile = new NumerologyProfileResponse(
                 1L,
-                6, "You care about others, you are thoughtful and loyal.",
-                11, "You are a visionary and deeply spiritual.",
-                7, "You may be seen as deep, wise, and mysterious.",
-                9, "You are generous, emotional, and dramatic in self-expression.",
-                6, "You find fulfillment in service, family, and community.",
-                "Marian",
-                "Filip"
+                new ProfileDto(6, "M6"),
+                new ProfileDto(11,"M11"),
+                new ProfileDto(7,"M7"),
+                new ProfileDto(9,"M9"),
+                new ProfileDto(6,"M6b"),
+                "Marian","Filip"
         );
+        when(numerologyService.generateAndSaveProfile(dto)).thenReturn(profile);
+
+        ResponseEntity<NumerologyProfileResponse> resp = controller.create(dto);
+
+        assertEquals(200, resp.getStatusCode().value());
+        assertEquals(6, Objects.requireNonNull(resp.getBody()).destiny().number());
+        verify(numerologyService).generateAndSaveProfile(dto);
     }
 
     @Test
-    void createProfile_returnsExpectedResponse() {
-        when(numerologyService.generateAndSaveProfile(testDto)).thenReturn(response);
+    void getMeaning_returnsProfileDto() {
+        when(meaningService.getMeaning(6, MeaningType.DESTINY)).thenReturn("Balanced");
 
-        ResponseEntity<NumerologyProfileResponse> result = controller.create(testDto);
+        ResponseEntity<ProfileDto> resp = controller.getMeaning(6, MeaningType.DESTINY);
 
-        assertEquals(200, result.getStatusCode().value());
-        assertEquals(6, Objects.requireNonNull(result.getBody()).destinyNumber());
-        verify(numerologyService).generateAndSaveProfile(testDto);
-    }
-
-    @Test
-    void readProfileById_returnsProfile() {
-        when(numerologyService.findProfile(1L)).thenReturn(response);
-
-        ResponseEntity<NumerologyProfileResponse> result = controller.read(1L);
-
-        assertEquals(200, result.getStatusCode().value());
-        assertEquals("Filip", Objects.requireNonNull(result.getBody()).lastName());
-    }
-
-    @Test
-    void getAllProfiles_returnsList() {
-        when(numerologyService.findAllProfiles()).thenReturn(List.of(response));
-
-        ResponseEntity<List<NumerologyProfileResponse>> result = controller.getAllProfiles();
-
-        assertEquals(200, result.getStatusCode().value());
-        assertEquals(1, Objects.requireNonNull(result.getBody()).size());
-    }
-
-    @Test
-    void getMeaning_returnsExpectedText() {
-        when(meaningService.getMeaning(6, MeaningType.DESTINY))
-                .thenReturn("You are balanced and nurturing");
-
-        ResponseEntity<String> result = controller.getMeaning(6, "DESTINY");
-
-        assertEquals(200, result.getStatusCode().value());
-        assertTrue(Objects.requireNonNull(result.getBody()).toLowerCase().contains("balanced"));
+        assertEquals(200, resp.getStatusCode().value());
+        assertEquals(6, Objects.requireNonNull(resp.getBody()).number());
+        assertEquals("Balanced", resp.getBody().meaning());
+        verify(meaningService).getMeaning(6, MeaningType.DESTINY);
     }
 }

@@ -1,55 +1,45 @@
 package com.example.integration;
 
-import com.example.dto.NumerologyProfileResponse;
 import com.example.dto.UserDto;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.http.*;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Transactional  // erases any effects of the test on the database
-public class NumerologyIntegrationTest {
-
-    @LocalServerPort
-    private int port;
+@SpringBootTest
+@AutoConfigureMockMvc
+class NumerologyIntegrationTest {
 
     @Autowired
-    private TestRestTemplate restTemplate;
+    private MockMvc mvc;
+
+    @Autowired
+    private ObjectMapper mapper;
 
     @Test
-    void createsProfileAndReturnsCorrectData() {
-        String url = "http://localhost:" + port + "/api/profile";
+    void createsProfileAndReturnsCorrectData() throws Exception {
+        // given
+        UserDto dto = new UserDto("Marian", "Filip", 1991, 4, 27);
+        String json = mapper.writeValueAsString(dto);
 
-        UserDto user = new UserDto("Marian", "Filip", 1991, 4, 27);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        HttpEntity<UserDto> request = new HttpEntity<>(user, headers);
-
-        ResponseEntity<NumerologyProfileResponse> response =
-                restTemplate.postForEntity(url, request, NumerologyProfileResponse.class);
-
-        assertEquals(HttpStatus.OK, response.getStatusCode(), "HTTP Status Code 200 is OK");
-        assertNotNull(response.getBody(), "Answer must contain a body");
-
-        NumerologyProfileResponse profile = response.getBody();
-        assertNotNull(profile, "Returned profile must not be null");
-
-        assertAll("Checks on numerological values",
-                () -> assertEquals("Marian", profile.firstName()),
-                () -> assertEquals("Filip", profile.lastName()),
-                () -> assertEquals(6, profile.destinyNumber()),
-                () -> assertEquals(11, profile.soulUrgeNumber()),
-                () -> assertEquals(7, profile.personalityNumber()),
-                () -> assertEquals(9, profile.expressionNumber()),
-                () -> assertEquals(6, profile.maturityNumber())
-        );
+        // when / then
+        mvc.perform(post("/api/profiles")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andExpect(status().isOk())
+                // basic sanity checks on JSON body:
+                .andExpect(jsonPath("$.firstName").value("Marian"))
+                .andExpect(jsonPath("$.lastName").value("Filip"))
+                .andExpect(jsonPath("$.destiny.number").value(6))
+                .andExpect(jsonPath("$.soulUrge.number").value(11))
+                .andExpect(jsonPath("$.personality.number").value(7))
+                .andExpect(jsonPath("$.expression.number").value(9))
+                .andExpect(jsonPath("$.maturity.number").value(6));
     }
 }

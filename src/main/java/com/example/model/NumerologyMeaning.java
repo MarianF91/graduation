@@ -1,26 +1,33 @@
 package com.example.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-@NoArgsConstructor
-@AllArgsConstructor
+import java.util.Objects;
+
 @Entity
 @Table(name = "numerology_meaning")
-@IdClass(NumerologyMeaningId.class)
-@Getter
-@Setter
+@Access(AccessType.FIELD)
+@Getter @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class NumerologyMeaning {
 
-    @Id
-    private int number;
+    @EmbeddedId
+    private NumerologyMeaningId id;
 
-    @Id
-    private String type;
-
-    @Column(length = 2000)
+    @Column(name = "description", nullable = false)
     private String description;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof NumerologyMeaning that)) return false;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }
