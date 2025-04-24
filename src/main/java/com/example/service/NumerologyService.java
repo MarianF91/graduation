@@ -9,4 +9,6 @@ public interface NumerologyService {
     NumerologyProfileResponse calculateProfile(UserDto dto);
     NumerologyProfileResponse findProfile(Long id);
     List<NumerologyProfileResponse> findAllProfiles();
+    void deleteProfile(Long id);
+    void deleteAllProfiles();
 }

@@ -10,6 +10,8 @@ import com.example.model.User;
 import com.example.repository.ProfileRepository;
 import com.example.repository.UserRepository;
 import com.example.utils.NumerologyCalculator;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +25,9 @@ public class NumerologyServiceImpl implements NumerologyService {
     private final UserRepository userRepository;
     private final ProfileRepository profileRepository;
     private final NumerologyMapper numerologyMapper;
-    private final UserMapper userMapper;
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Override
     public NumerologyProfileResponse calculateProfile(UserDto dto) {
@@ -31,13 +35,16 @@ public class NumerologyServiceImpl implements NumerologyService {
                 .findByFirstNameAndLastNameAndBirthYearAndBirthMonthAndBirthDay(
                         dto.firstName(), dto.lastName(),
                         dto.birthYear(), dto.birthMonth(), dto.birthDay()
-                ).orElseGet(() ->
-                        userRepository.save(userMapper.toEntity(dto))
-                );
+                )
+                .orElseGet(() -> userRepository.save(UserMapper.toEntity(dto)));
 
-        NumerologyProfile profile = NumerologyCalculator.generateProfile(user);
-        NumerologyProfile saved   = profileRepository.save(profile);
-        return numerologyMapper.toResponse(saved);
+        NumerologyProfile profile = profileRepository.findByUser(user)
+                .orElseGet(() -> {
+                    NumerologyProfile newProfile = NumerologyCalculator.generateProfile(user);
+                    return profileRepository.save(newProfile);
+                });
+
+        return numerologyMapper.toResponse(profile);
     }
 
     @Override
@@ -52,5 +59,19 @@ public class NumerologyServiceImpl implements NumerologyService {
         return profileRepository.findAll().stream()
                 .map(numerologyMapper::toResponse)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void deleteProfile(Long id) {
+        profileRepository.deleteById(id);
+    }
+
+    @Override
+    public void deleteAllProfiles() {
+        profileRepository.deleteAll();
+        userRepository.deleteAll();
+
+        entityManager.createNativeQuery("ALTER SEQUENCE numerology_profile_id_seq RESTART WITH 1").executeUpdate();
+        entityManager.createNativeQuery("ALTER SEQUENCE users_id_seq RESTART WITH 1").executeUpdate();
     }
 }

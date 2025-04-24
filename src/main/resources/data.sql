@@ -9,8 +9,11 @@ VALUES
     (6, 'DESTINY', 'You care about others, you are thoughtful and loyal.'),
     (7, 'DESTINY', 'You are analytic, spiritual and introspective.'),
     (8, 'DESTINY', 'You are a natural leader, you are ambitious and materialistic.'),
-    (9, 'DESTINY', 'You are altruistic, idealistic and a dreamer.')
-    ON CONFLICT (number, type) DO NOTHING;
+    (9, 'DESTINY', 'You are altruistic, idealistic and a dreamer.'),
+    (11, 'DESTINY', 'You are intuitive, idealistic, and spiritually aware.'),
+    (22, 'DESTINY', 'You are a master builder, practical and visionary.'),
+    (33, 'DESTINY', 'You are compassionate, nurturing, and a master teacher.')
+ON CONFLICT (number, type) DO NOTHING;
 
 -- SOUL URGE NUMBER
 INSERT INTO numerology_meaning (number, type, description)
@@ -23,8 +26,11 @@ VALUES
     (6, 'SOUL_URGE', 'You seek responsibility, nurturing roles, and service to others.'),
     (7, 'SOUL_URGE', 'You are drawn to introspection, knowledge, and the spiritual.'),
     (8, 'SOUL_URGE', 'You desire material success, power, and achievement.'),
-    (9, 'SOUL_URGE', 'You are driven by compassion, generosity, and a global mission.')
-    ON CONFLICT (number, type) DO NOTHING;
+    (9, 'SOUL_URGE', 'You are driven by compassion, generosity, and a global mission.'),
+    (11, 'SOUL_URGE', 'You are a visionary and deeply spiritual.'),
+    (22, 'SOUL_URGE', 'You desire to leave a lasting legacy.'),
+    (33, 'SOUL_URGE', 'You are driven by love and humanitarian causes.')
+ON CONFLICT (number, type) DO NOTHING;
 
 -- PERSONALITY NUMBER
 INSERT INTO numerology_meaning (number, type, description)
@@ -37,8 +43,11 @@ VALUES
     (6, 'PERSONALITY', 'You come across as nurturing, loyal, and responsible.'),
     (7, 'PERSONALITY', 'You may be seen as deep, wise, and mysterious.'),
     (8, 'PERSONALITY', 'You are perceived as ambitious, strong, and authoritative.'),
-    (9, 'PERSONALITY', 'People see you as compassionate, idealistic, and charismatic.')
-    ON CONFLICT (number, type) DO NOTHING;
+    (9, 'PERSONALITY', 'People see you as compassionate, idealistic, and charismatic.'),
+    (11, 'PERSONALITY', 'You appear deeply intuitive and spiritually aware.'),
+    (22, 'PERSONALITY', 'You are seen as grounded but visionary and impactful.'),
+    (33, 'PERSONALITY', 'You radiate empathy and inspire others with your compassion.')
+ON CONFLICT (number, type) DO NOTHING;
 
 -- EXPRESSION NUMBER
 INSERT INTO numerology_meaning (number, type, description)
@@ -51,8 +60,11 @@ VALUES
     (6, 'EXPRESSION', 'You express nurturing, care, and responsibility naturally.'),
     (7, 'EXPRESSION', 'You are introspective, thoughtful, and reserved in communication.'),
     (8, 'EXPRESSION', 'You express ambition, authority, and strong business sense.'),
-    (9, 'EXPRESSION', 'You are generous, emotional, and dramatic in self-expression.')
-    ON CONFLICT (number, type) DO NOTHING;
+    (9, 'EXPRESSION', 'You are generous, emotional, and dramatic in self-expression.'),
+    (11, 'EXPRESSION', 'You express higher ideals and inspiration.'),
+    (22, 'EXPRESSION', 'You express leadership and big-picture thinking.'),
+    (33, 'EXPRESSION', 'You express empathy, beauty, and truth.')
+ON CONFLICT (number, type) DO NOTHING;
 
 -- MATURITY NUMBER
 INSERT INTO numerology_meaning (number, type, description)
@@ -65,22 +77,28 @@ VALUES
     (6, 'MATURITY', 'You find fulfillment in service, family, and community.'),
     (7, 'MATURITY', 'You grow spiritually and intellectually, becoming a seeker of truth.'),
     (8, 'MATURITY', 'You reach material success, power, and business acumen.'),
-    (9, 'MATURITY', 'You live with compassion, purpose, and service to humanity.')
-    ON CONFLICT (number, type) DO NOTHING;
+    (9, 'MATURITY', 'You live with compassion, purpose, and service to humanity.'),
+    (11, 'MATURITY', 'You become a beacon of enlightenment and purpose.'),
+    (22, 'MATURITY', 'You mature into someone who creates foundations for others.'),
+    (33, 'MATURITY', 'You mature into someone who heals and inspires.')
+ON CONFLICT (number, type) DO NOTHING;
 
 -- BALANCE NUMBER
 INSERT INTO numerology_meaning (number, type, description)
 VALUES
-    (1, 'BALANCE', 'You tend to handle stress through leadership and direct action.'),
-    (2, 'BALANCE', 'You seek harmony and compromise in stressful times.'),
-    (3, 'BALANCE', 'You cope with challenges through creativity and humor.'),
-    (4, 'BALANCE', 'You manage problems through structure, planning, and consistency.'),
-    (5, 'BALANCE', 'You deal with issues by seeking freedom and change.'),
-    (6, 'BALANCE', 'You find balance by helping others and creating harmony.'),
-    (7, 'BALANCE', 'You turn inward and seek spiritual answers during tough times.'),
-    (8, 'BALANCE', 'You assert control and rely on discipline under pressure.'),
-    (9, 'BALANCE', 'You respond with compassion and empathy in crises.')
-    ON CONFLICT (number, type) DO NOTHING;
+    (1, 'BALANCE', 'You handle stress through leadership and decisive action.'),
+    (2, 'BALANCE', 'You seek compromise and peace in tough situations.'),
+    (3, 'BALANCE', 'You balance difficulties through humor and joy.'),
+    (4, 'BALANCE', 'You cope with structure, planning, and focus.'),
+    (5, 'BALANCE', 'You find balance by seeking change and adventure.'),
+    (6, 'BALANCE', 'You restore harmony by helping others.'),
+    (7, 'BALANCE', 'You retreat and seek spiritual grounding.'),
+    (8, 'BALANCE', 'You take charge with confidence and discipline.'),
+    (9, 'BALANCE', 'You turn to compassion and empathy.'),
+    (11, 'BALANCE', 'You align yourself with inner wisdom and light.'),
+    (22, 'BALANCE', 'You draw strength from your mission to serve humanity.'),
+    (33, 'BALANCE', 'You remain calm by supporting others lovingly.')
+ON CONFLICT (number, type) DO NOTHING;
 
 -- BIRTHDAY NUMBER
 INSERT INTO numerology_meaning (number, type, description)
@@ -95,8 +113,9 @@ VALUES
     (8, 'BIRTHDAY', 'You are ambitious, organized, and goal-driven.'),
     (9, 'BIRTHDAY', 'You are compassionate, wise, and humanitarian.'),
     (11, 'BIRTHDAY', 'You are idealistic, intuitive, and spiritually gifted.'),
-    (22, 'BIRTHDAY', 'You are a visionary with practical skills to realize big goals.')
-    ON CONFLICT (number, type) DO NOTHING;
+    (22, 'BIRTHDAY', 'You are a visionary with practical skills to realize big goals.'),
+    (33, 'BIRTHDAY', 'You are deeply caring, highly responsible, and spiritually gifted.')
+ON CONFLICT (number, type) DO NOTHING;
 
 -- LESSON NUMBER
 INSERT INTO numerology_meaning (number, type, description)
@@ -111,8 +130,9 @@ VALUES
     (8, 'LESSON', 'Learn to manage power, ambition, and material resources wisely.'),
     (9, 'LESSON', 'Learn selflessness, forgiveness, and universal love.'),
     (11, 'LESSON', 'Learn to embrace your spiritual insights and use them for the greater good.'),
-    (22, 'LESSON', 'Learn to manifest large-scale dreams with grounded practicality.')
-    ON CONFLICT (number, type) DO NOTHING;
+    (22, 'LESSON', 'Learn to manifest large-scale dreams with grounded practicality.'),
+    (33, 'LESSON', 'Learn to serve others with compassion, truth, and higher purpose.')
+ON CONFLICT (number, type) DO NOTHING;
 
 -- LIFE PATH NUMBER
 INSERT INTO numerology_meaning (number, type, description)
@@ -127,24 +147,6 @@ VALUES
     (8, 'LIFE_PATH', 'You are ambitious, organized, and business-minded.'),
     (9, 'LIFE_PATH', 'You are compassionate, idealistic, and philanthropic.'),
     (11, 'LIFE_PATH', 'You are an inspired visionary with strong intuition and purpose.'),
-    (22, 'LIFE_PATH', 'You are a master builder with great potential to uplift humanity.')
-    ON CONFLICT (number, type) DO NOTHING;
-
--- MASTER NUMBERS
-INSERT INTO numerology_meaning (number, type, description)
-VALUES
-    (11, 'DESTINY', 'You are intuitive, idealistic, and spiritually aware.'),
-    (11, 'SOUL_URGE', 'You are a visionary and deeply spiritual.'),
-    (11, 'EXPRESSION', 'You express higher ideals and inspiration.'),
-    (11, 'MATURITY', 'You become a beacon of enlightenment and purpose.'),
-
-    (22, 'DESTINY', 'You are a master builder, practical and visionary.'),
-    (22, 'SOUL_URGE', 'You desire to leave a lasting legacy.'),
-    (22, 'EXPRESSION', 'You express leadership and big-picture thinking.'),
-    (22, 'MATURITY', 'You mature into someone who creates foundations for others.'),
-
-    (33, 'DESTINY', 'You are compassionate, nurturing, and a master teacher.'),
-    (33, 'SOUL_URGE', 'You are driven by love and humanitarian causes.'),
-    (33, 'EXPRESSION', 'You express empathy, beauty, and truth.'),
-    (33, 'MATURITY', 'You mature into someone who heals and inspires.')
-    ON CONFLICT (number, type) DO NOTHING;
+    (22, 'LIFE_PATH', 'You are a master builder with great potential to uplift humanity.'),
+    (33, 'LIFE_PATH', 'You are a master teacher, highly compassionate and spiritually gifted.')
+ON CONFLICT (number, type) DO NOTHING;

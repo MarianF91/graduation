@@ -1,4 +1,3 @@
-// src/main/java/com/example/model/User.java
 package com.example.model;
 
 import jakarta.persistence.*;

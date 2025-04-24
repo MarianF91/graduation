@@ -1,4 +1,3 @@
-// src/main/java/com/example/service/UserServiceImpl.java
 package com.example.service;
 
 import com.example.dto.UserDto;
@@ -16,25 +15,24 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final UserMapper     userMapper;
 
     @Override
     public UserDto createUser(UserDto dto) {
-        User saved = userRepository.save(userMapper.toEntity(dto));
-        return userMapper.toDto(saved);
+        User saved = userRepository.save(UserMapper.toEntity(dto));
+        return UserMapper.toDto(saved);
     }
 
     @Override
     public UserDto findUser(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
-        return userMapper.toDto(user);
+        return UserMapper.toDto(user);
     }
 
     @Override
     public List<UserDto> findAllUsers() {
         return userRepository.findAll().stream()
-                .map(userMapper::toDto)
+                .map(UserMapper::toDto)
                 .toList();
     }
 }

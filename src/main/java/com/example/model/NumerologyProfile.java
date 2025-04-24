@@ -8,10 +8,12 @@ import lombok.*;
 @Getter @Setter
 @NoArgsConstructor
 public class NumerologyProfile {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(optional = false)
+    @OneToOne(optional = false)
+    @JoinColumn(name = "user_id", unique = true)
     private User user;
 
     private int destinyNumber;

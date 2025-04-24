@@ -39,4 +39,15 @@ public class NumerologyController {
         return ResponseEntity.ok(new ProfileDto(number, text));
     }
 
+    @DeleteMapping("/profiles/{id}")
+    public ResponseEntity<Void> deleteProfile(@PathVariable Long id) {
+        numerologyService.deleteProfile(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/profiles")
+    public ResponseEntity<Void> deleteAllProfiles() {
+        numerologyService.deleteAllProfiles();
+        return ResponseEntity.noContent().build();
+    }
 }

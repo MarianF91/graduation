@@ -36,7 +36,7 @@ class NumerologyIntegrationTest {
                 // basic sanity checks on JSON body:
                 .andExpect(jsonPath("$.firstName").value("Marian"))
                 .andExpect(jsonPath("$.lastName").value("Filip"))
-                .andExpect(jsonPath("$.destiny.number").value(33))
+                .andExpect(jsonPath("$.destiny.number").value(9))
                 .andExpect(jsonPath("$.soulUrge.number").value(11))
                 .andExpect(jsonPath("$.personality.number").value(7))
                 .andExpect(jsonPath("$.expression.number").value(9))

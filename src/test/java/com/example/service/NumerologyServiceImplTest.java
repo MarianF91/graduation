@@ -4,8 +4,8 @@ import com.example.dto.NumerologyProfileResponse;
 import com.example.dto.ProfileDto;
 import com.example.dto.UserDto;
 import com.example.exception.ProfileNotFoundException;
-import com.example.mapper.NumerologyMapper;
 import com.example.mapper.UserMapper;
+import com.example.mapper.NumerologyMapper;
 import com.example.model.NumerologyProfile;
 import com.example.model.User;
 import com.example.repository.ProfileRepository;
@@ -27,28 +27,27 @@ class NumerologyServiceImplTest {
 
     @Mock private UserRepository userRepository;
     @Mock private ProfileRepository profileRepository;
-    @Mock private UserMapper userMapper;
     @Mock private NumerologyMapper numerologyMapper;
 
     @InjectMocks
     private NumerologyServiceImpl service;
 
     private final UserDto dto = new UserDto("Ana", "Pop", 1990, 5, 15);
-    private final User user = new User("Ana", "Pop", 1990, 5, 15);
 
     @Test
     void calculateProfile_createsNewUserAndReturnsMappedResponse() {
-        // a) no existing user → we save a new one
+        // a) no existing user -> we save a new one
         when(userRepository
                 .findByFirstNameAndLastNameAndBirthYearAndBirthMonthAndBirthDay(
                         dto.firstName(), dto.lastName(),
                         dto.birthYear(), dto.birthMonth(), dto.birthDay()))
                 .thenReturn(Optional.empty());
-        when(userMapper.toEntity(dto)).thenReturn(user);
-        when(userRepository.save(user)).thenReturn(user);
+
+        User mappedUser = UserMapper.toEntity(dto);
+        when(userRepository.save(any(User.class))).thenReturn(mappedUser);
 
         // b) generate & save profile
-        NumerologyProfile generated = NumerologyCalculator.generateProfile(user);
+        NumerologyProfile generated = NumerologyCalculator.generateProfile(mappedUser);
         generated.setId(42L);
         when(profileRepository.save(any(NumerologyProfile.class)))
                 .thenReturn(generated);
@@ -65,7 +64,7 @@ class NumerologyServiceImplTest {
                 new ProfileDto(generated.getMaturityNumber(),    "M meaning"),
                 new ProfileDto(generated.getBalanceNumber(),     "BA meaning"),
                 new ProfileDto(generated.getLessonNumber(),      "L meaning"),
-                user.getFirstName(), user.getLastName()
+                mappedUser.getFirstName(), mappedUser.getLastName()
         );
 
         when(numerologyMapper.toResponse(generated)).thenReturn(expected);
@@ -75,18 +74,18 @@ class NumerologyServiceImplTest {
 
         // verify
         assertSame(expected, actual);
-        InOrder inOrder = inOrder(userRepository, userMapper, profileRepository, numerologyMapper);
+        InOrder inOrder = inOrder(userRepository, profileRepository, numerologyMapper);
         inOrder.verify(userRepository).findByFirstNameAndLastNameAndBirthYearAndBirthMonthAndBirthDay(
                 dto.firstName(), dto.lastName(),
                 dto.birthYear(), dto.birthMonth(), dto.birthDay());
-        inOrder.verify(userMapper).toEntity(dto);
-        inOrder.verify(userRepository).save(user);
+        inOrder.verify(userRepository).save(any(User.class));
         inOrder.verify(profileRepository).save(any(NumerologyProfile.class));
         inOrder.verify(numerologyMapper).toResponse(generated);
     }
 
     @Test
     void findProfile_existingId_returnsMappedResponse() {
+        User user = UserMapper.toEntity(dto);
         NumerologyProfile p = NumerologyCalculator.generateProfile(user);
         p.setId(100L);
         when(profileRepository.findById(100L)).thenReturn(Optional.of(p));
@@ -94,7 +93,7 @@ class NumerologyServiceImplTest {
         NumerologyProfileResponse stub = new NumerologyProfileResponse(
                 100L,
                 new ProfileDto(p.getLifePathNumber(),    "any"),
-                new ProfileDto(p.getDestinyNumber(),     "any"), // <--- ADD THIS
+                new ProfileDto(p.getDestinyNumber(),     "any"),
                 new ProfileDto(p.getExpressionNumber(),  "any"),
                 new ProfileDto(p.getSoulUrgeNumber(),    "any"),
                 new ProfileDto(p.getPersonalityNumber(), "any"),
@@ -119,8 +118,8 @@ class NumerologyServiceImplTest {
 
     @Test
     void findAllProfiles_mapsAll() {
-        User u1 = new User("Ana", "Pop", 1990, 5, 15);
-        User u2 = new User("Ion", "Ionescu", 1985, 6, 10);
+        User u1 = UserMapper.toEntity(new UserDto("Ana", "Pop", 1990, 5, 15));
+        User u2 = UserMapper.toEntity(new UserDto("Ion", "Ionescu", 1985, 6, 10));
 
         NumerologyProfile p1 = NumerologyCalculator.generateProfile(u1); p1.setId(1L);
         NumerologyProfile p2 = NumerologyCalculator.generateProfile(u2); p2.setId(2L);

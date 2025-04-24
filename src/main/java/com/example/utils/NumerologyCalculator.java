@@ -5,50 +5,54 @@ import com.example.model.User;
 
 public class NumerologyCalculator {
 
+    // Master numbers that are not reduced further
+    private static final int MASTER_11 = 11;
+    private static final int MASTER_22 = 22;
+    private static final int MASTER_33 = 33;
+
     public static NumerologyProfile generateProfile(User user) {
-        NumerologyProfile p = new NumerologyProfile();
-        p.setUser(user);
+        NumerologyProfile profile = new NumerologyProfile();
+        profile.setUser(user);
 
         int lifePath = calculateLifePathNumber(user.getBirthYear(), user.getBirthMonth(), user.getBirthDay());
-        int destiny = calculateDestinyNumber(user.getBirthYear(), user.getBirthMonth(), user.getBirthDay());
+        int destiny = calculateDestinyNumber(user.getFirstName() + " " + user.getLastName());
         int expression = calculateExpressionNumber(user.getFirstName() + " " + user.getLastName());
         int soulUrge = calculateSoulUrgeNumber(user.getFirstName() + " " + user.getLastName());
         int personality = calculatePersonalityNumber(user.getFirstName() + " " + user.getLastName());
         int birthday = calculateBirthdayNumber(user.getBirthDay());
-        int maturity = calculateMaturityNumber(destiny, expression);
+        int maturity = calculateMaturityNumber(destiny, lifePath);
         int balance = calculateBalanceNumber(destiny, birthday);
         int lesson = calculateLessonNumber(user.getBirthDay());
 
-        p.setLifePathNumber(lifePath);
-        p.setDestinyNumber(destiny);
-        p.setLifePathNumber(destiny); // Optional: if using both
-        p.setExpressionNumber(expression);
-        p.setSoulUrgeNumber(soulUrge);
-        p.setPersonalityNumber(personality);
-        p.setBirthdayNumber(birthday);
-        p.setMaturityNumber(maturity);
-        p.setBalanceNumber(balance);
-        p.setLessonNumber(lesson);
+        profile.setLifePathNumber(lifePath);
+        profile.setDestinyNumber(destiny);
+        profile.setExpressionNumber(expression);
+        profile.setSoulUrgeNumber(soulUrge);
+        profile.setPersonalityNumber(personality);
+        profile.setBirthdayNumber(birthday);
+        profile.setMaturityNumber(maturity);
+        profile.setBalanceNumber(balance);
+        profile.setLessonNumber(lesson);
 
-        return p;
+        return profile;
     }
 
     public static int calculateLifePathNumber(int year, int month, int day) {
-                int reducedDay = reduceWithMasterNumbers(day);
-        int reducedMonth = reduceWithMasterNumbers(month);
-        int reducedYear = reduceWithMasterNumbers(year);
+        int reducedYear = reduceWithMasterNumbers(sumDigits(year));
+        int reducedMonth = reduceWithMasterNumbers(sumDigits(month));
+        int reducedDay = reduceWithMasterNumbers(sumDigits(day));
 
-        int total = reducedDay + reducedMonth + reducedYear;
+        int total = reducedYear + reducedMonth + reducedDay;
         return reduceWithMasterNumbers(total);
     }
 
-    public static int calculateDestinyNumber(int year, int month, int day) {
-        int total = sumDigits(year) + sumDigits(month) + sumDigits(day);
-        return reduceWithMasterNumbers(total);
-    }
-
-    public static int calculateBirthdayNumber(int dayOfMonth) {
-        return reduceWithMasterNumbers(dayOfMonth);
+    public static int calculateDestinyNumber(String fullName) {
+        int sum = fullName.chars()
+                .filter(Character::isLetter)
+                .map(Character::toUpperCase)
+                .map(c -> c - 'A' + 1)
+                .sum();
+        return reduceWithMasterNumbers(sum);
     }
 
     public static int calculateExpressionNumber(String name) {
@@ -80,47 +84,45 @@ public class NumerologyCalculator {
         return reduceWithMasterNumbers(sum);
     }
 
-    public static int calculateMaturityNumber(int destinyNumber, int expressionNumber) {
-        return reduceWithMasterNumbers(destinyNumber + expressionNumber);
-    }
-
-    public static int calculateBalanceNumber(int destinyNumber, int birthdayNumber) {
-        return reduceToSingleDigit(Math.abs(destinyNumber - birthdayNumber));
-    }
-
-    public static int calculateLessonNumber(int dayOfMonth) {
+    public static int calculateBirthdayNumber(int dayOfMonth) {
         return reduceWithMasterNumbers(dayOfMonth);
     }
 
-    private static int sumDigits(int n) {
+    public static int calculateMaturityNumber(int destiny, int lifePath) {
+        return reduceWithMasterNumbers(destiny + lifePath);
+    }
+
+    public static int calculateBalanceNumber(int destinyNumber, int birthdayNumber) {
+        return reduceToSingleDigit(Math.max(1, Math.abs(destinyNumber - birthdayNumber)));
+    }
+
+    public static int calculateLessonNumber(int day) {
+        return reduceWithMasterNumbers(day);
+    }
+
+    private static int reduceWithMasterNumbers(int number) {
+        number = Math.abs(number);
+        while (number > 9 && number != MASTER_11 && number != MASTER_22 && number != MASTER_33) {
+            number = sumDigits(number);
+        }
+        return number;
+    }
+
+    private static int reduceToSingleDigit(int number) {
+        number = Math.abs(number);
+        while (number > 9) {
+            number = sumDigits(number);
+        }
+        return number;
+    }
+
+    private static int sumDigits(int number) {
+        number = Math.abs(number);
         int sum = 0;
-        n = Math.abs(n);
-        while (n > 0) {
-            sum += n % 10;
-            n /= 10;
+        while (number > 0) {
+            sum += number % 10;
+            number /= 10;
         }
         return sum;
-    }
-
-    private static int reduceWithMasterNumbers(int n) {
-        n = Math.abs(n);
-        while (n > 9 && n != 11 && n != 22 && n != 33) {
-            n = sumDigits(n);
-        }
-        return n;
-    }
-
-    private static int reduceToSingleDigit(int n) {
-        n = Math.abs(n);
-        while (n > 9) {
-            n = sumDigits(n);
-        }
-        return n;
-    }
-
-    public static boolean isLeapYear(int year) {
-        if (year % 400 == 0) return true;
-        if (year % 100 == 0) return false;
-        return year % 4 == 0;
     }
 }
