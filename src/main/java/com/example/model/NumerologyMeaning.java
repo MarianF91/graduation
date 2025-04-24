@@ -30,5 +30,4 @@ public class NumerologyMeaning {
         this.type = type;
         this.description = description;
     }
-
 }

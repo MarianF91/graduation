@@ -28,7 +28,7 @@ class NumerologyIntegrationTest {
         UserDto dto = new UserDto("Marian", "Filip", 1991, 4, 27);
         String json = mapper.writeValueAsString(dto);
 
-        // when / then
+        // when/then
         mvc.perform(post("/api/numerology")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))

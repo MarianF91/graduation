@@ -56,7 +56,6 @@ class NumerologyControllerTest {
                 "Marian", "Filip"
         );
 
-
         when(numerologyService.calculateProfile(dto)).thenReturn(response);
 
         ResponseEntity<NumerologyProfileResponse> resp = controller.create(dto);
