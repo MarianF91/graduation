@@ -1,61 +1,59 @@
-# graduation
-Graduation project from IT School
+Graduation Project – Numerology App
+A numerology simulation application built as part of the IT School graduation project.
 
-A Numerology simulation app
+ Technologies Used
+- Java 21
+- Spring Boot 3.2+
+- Spring Data JPA
+- PostgreSQL
+- Maven
+- JUnit 5 & Mockito
+- Postman (for manual testing)
 
-Technologies Used
-
-- **Java 21**
-- **Spring Boot 3.2+**
-- **Spring Data JPA**
-- **PostgreSQL**
-- **Maven**
-- **JUnit 5 & Mockito**
-- **Postman** (manual testing)
-
-Key Features
-
-- Calculates:
-    - Destiny Number
-    - Soul Urge Number
-    - Personality Number
-    - Expression Number
-    - Maturity Number
-- Retrieves **meanings** for each number from the database
-- Automatically saves users and generated profiles
-- Supports fetching all existing users
+ Key Features
+1. Calculates numerology numbers:
+- Destiny Number;
+- Soul Urge Number;
+- Personality Number;
+- Expression Number;
+- Maturity Number;
+- Birthday Number;
+- Lesson Number;
+- Balance Number;
+- Life Path Number;
+2. Retrieves meanings for each number from the database.
+3. Automatically saves users and generated profiles.
+4. Allows fetching all existing profiles.
 
 Database Structure
 - users – stores user data (name, date of birth)
-- numerology_profile – stores calculated numbers (linked to a user)
-- numerology_meaning – stores meanings for numbers 1–9 (+ master numbers)
+- numerology_profile – stores calculated numerology numbers (linked to a user)
+- numerology_meaning – stores meanings for numbers 1–9 and master numbers
 
 Testing
-
-Unit tests for:
-- Numerology calculations
-- Meaning retrieval from the database
-- Run tests with: ./mvnw clean test
+1. Includes unit tests for:
+- Core numerology calculations;
+- Meaning retrieval logic;
+2. Run tests:
+- bash: ./mvnw clean test
 
 Possible Extensions
-- Add a frontend UI (React, Angular)
-- Export profile as PDF
-- Track user history
-- Add login system (user/admin roles)
+- Add a frontend UI (e.g., React or Angular).
+- Export profile as PDF.
+- Track user history.
+- Add login/auth system (user/admin roles).
 
-Quick Demo
+API Quick Demo
+- Swagger UI: http://localhost:8080/swagger-ui.html
+- API Docs: http://localhost:8080/v3/api-docs
+- Endpoints:
+1) POST: /api/profiles -> Create numerology profile
+2) GET: /api/users -> List all users
+3) GET: /api/profiles/meanings?number=6&type=DESTINY -> Get meaning for a number
 
-- **Swagger UI**: http://localhost:8080/swagger-ui.html
-- **API docs**:     http://localhost:8080/v3/api-docs
-- **Create profile**: POST http://localhost:8080/api/profiles
-- **List users**:    GET  http://localhost:8080/api/users
-- **Get meaning**:   GET  http://localhost:8080/api/profiles/meanings?number=6&type=DESTINY
-
-To reset the database and ensure ID sequences start from 1:
-
-1. Open `pgAdmin` or your SQL interface.
-2. Run the following SQL script:
-
+Manual Database Reset (optional)
+If needed for testing purposes:
+- sql:
 ```sql
 TRUNCATE TABLE numerology_profile, users CASCADE;
 ALTER SEQUENCE users_id_seq RESTART WITH 1;
