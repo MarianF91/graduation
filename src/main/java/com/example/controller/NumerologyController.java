@@ -1,16 +1,14 @@
 package com.example.controller;
 
-import com.example.dto.NumerologyProfileResponse;
 import com.example.dto.ProfileDto;
-import com.example.dto.UserDto;
 import com.example.model.MeaningType;
 import com.example.service.MeaningService;
 import com.example.service.NumerologyService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+// controller for "Meaning" type operations and profile deletion
 
 @RestController
 @RequestMapping("/api/numerology")
@@ -20,16 +18,7 @@ public class NumerologyController {
     private final NumerologyService numerologyService;
     private final MeaningService meaningService;
 
-    @PostMapping
-    public ResponseEntity<NumerologyProfileResponse> create(
-            @Valid @RequestBody UserDto dto
-    ) {
-        NumerologyProfileResponse response = numerologyService.calculateProfile(dto);
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(response);
-    }
-
+    // returns the description of a number, depending on its type (e.g.: DESTINY, LIFE_PATH etc.)
     @GetMapping("/meaning")
     public ResponseEntity<ProfileDto> getMeaning(
             @RequestParam int number,
@@ -39,12 +28,14 @@ public class NumerologyController {
         return ResponseEntity.ok(new ProfileDto(number, text));
     }
 
+    // deletes a profile in accordance with it's id
     @DeleteMapping("/profiles/{id}")
     public ResponseEntity<Void> deleteProfile(@PathVariable Long id) {
         numerologyService.deleteProfile(id);
         return ResponseEntity.noContent().build();
     }
 
+    // deletes all profiles and their users
     @DeleteMapping("/profiles")
     public ResponseEntity<Void> deleteAllProfiles() {
         numerologyService.deleteAllProfiles();

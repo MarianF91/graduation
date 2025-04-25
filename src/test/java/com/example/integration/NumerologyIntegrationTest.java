@@ -29,7 +29,7 @@ class NumerologyIntegrationTest {
         String json = mapper.writeValueAsString(dto);
 
         // when/then
-        mvc.perform(post("/api/numerology")
+        mvc.perform(post("/api/profiles")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isCreated())
