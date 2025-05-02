@@ -10,13 +10,16 @@ import com.example.model.User;
 import com.example.repository.ProfileRepository;
 import com.example.repository.UserRepository;
 import com.example.utils.NumerologyCalculator;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-// Service class - manages the logic for creating, searching and deleting numerological profiles
+@Tag(name = "UserServiceImpl",
+        description = "Service class - manages the logic for creating, searching and deleting numerological profiles")
 @Service
 @RequiredArgsConstructor
 public class NumerologyServiceImpl implements NumerologyService {
@@ -26,7 +29,7 @@ public class NumerologyServiceImpl implements NumerologyService {
     private final ProfileRepository profileRepository;
     private final NumerologyMapper numerologyMapper;
 
-    //Creates or returns a profile for a specific user
+    @Operation(summary = "Creates or returns a profile for a specific user")
     @Override
     public NumerologyProfileResponse calculateProfile(UserDto dto) {
         // Checks if the user already exists
@@ -50,7 +53,7 @@ public class NumerologyServiceImpl implements NumerologyService {
         return numerologyMapper.toResponse(profile);
     }
 
-    // Returns a profile using its ID
+    @Operation(summary = "Returns a profile using its ID")
     @Override
     public NumerologyProfileResponse findProfile(Long id) {
         NumerologyProfile p = profileRepository.findById(id)
@@ -58,7 +61,7 @@ public class NumerologyServiceImpl implements NumerologyService {
         return numerologyMapper.toResponse(p);
     }
 
-    // Returns all the existing profiles as a DTO list
+    @Operation(summary = "Returns all the existing profiles as a DTO list")
     @Override
     public List<NumerologyProfileResponse> findAllProfiles() {
         return profileRepository.findAll().stream()
@@ -66,16 +69,17 @@ public class NumerologyServiceImpl implements NumerologyService {
                 .collect(Collectors.toList());
     }
 
-    // Erases a profile using its ID
+    @Operation(summary = "Erases a profile using its ID")
     @Override
     public void deleteProfile(Long id) {
-        profileRepository.deleteById(id);
+        NumerologyProfile profile = profileRepository.findById(id)
+                .orElseThrow(() -> new ProfileNotFoundException("Profile not found: " + id));
+        profileRepository.delete(profile);
     }
 
-    // Erases all profiles
+    @Operation(summary = "Erases all profiles")
     @Override
     public void deleteAllProfiles() {
-        profileRepository.deleteAll();
-        userRepository.deleteAll();
+        profileRepository.findAll().forEach(profileRepository::delete);
     }
 }

@@ -56,12 +56,12 @@ public class NumerologyCalculator {
     }
 
     public static int calculateExpressionNumber(String name) {
-        int sum = name.chars()
+        int sum = name.replaceAll("\\s+", "").chars()
                 .filter(Character::isLetter)
                 .map(Character::toUpperCase)
                 .map(c -> c - 'A' + 1)
                 .sum();
-        return reduceWithMasterNumbers(sum);
+        return reduceToSingleDigit(sum);
     }
 
     public static int calculateSoulUrgeNumber(String name) {

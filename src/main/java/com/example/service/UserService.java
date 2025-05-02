@@ -5,6 +5,6 @@ import java.util.List;
 
 public interface UserService {
     UserDto createUser(UserDto dto);
-    UserDto findUser(Long id);
+
     List<UserDto> findAllUsers();
 }

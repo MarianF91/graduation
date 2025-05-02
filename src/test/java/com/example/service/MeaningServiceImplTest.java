@@ -5,24 +5,27 @@ import com.example.model.NumerologyMeaning;
 import com.example.repository.NumerologyMeaningRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-class MeaningServiceImplTest {
+@ExtendWith(MockitoExtension.class)
+public class MeaningServiceImplTest {
 
     @Mock
     private NumerologyMeaningRepository repository;
 
-    @InjectMocks
     private MeaningServiceImpl service;
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
+        service = new MeaningServiceImpl(repository);
     }
 
     @Test
@@ -42,12 +45,14 @@ class MeaningServiceImplTest {
     }
 
     @Test
-    void returnsFallbackMessageIfNotFound() {
+    void whenNotFound_throwsStatus404() {
         when(repository.findByNumberAndType(13, MeaningType.LESSON))
                 .thenReturn(Optional.empty());
 
-        String result = service.getMeaning(13, MeaningType.LESSON);
-
-        assertEquals("No meaning found for 13 (LESSON)", result);
+                ResponseStatusException ex = assertThrows(
+                ResponseStatusException.class,
+                () -> service.getMeaning(13, MeaningType.LESSON)
+        );
+        assertEquals(404, ex.getStatusCode().value());
     }
 }

@@ -11,6 +11,7 @@ import com.example.model.User;
 import com.example.repository.ProfileRepository;
 import com.example.repository.UserRepository;
 import com.example.utils.NumerologyCalculator;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
@@ -23,14 +24,21 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class NumerologyServiceImplTest {
+public class NumerologyServiceImplTest {
 
     @Mock private UserRepository userRepository;
     @Mock private ProfileRepository profileRepository;
     @Mock private NumerologyMapper numerologyMapper;
 
-    @InjectMocks
     private NumerologyServiceImpl service;
+
+    @BeforeEach
+    void init() {
+        service = new NumerologyServiceImpl(
+                userRepository,
+                profileRepository,
+                numerologyMapper);
+    }
 
     private final UserDto dto = new UserDto("Ana", "Pop", 1990, 5, 15);
 

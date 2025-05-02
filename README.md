@@ -1,60 +1,41 @@
-Graduation Project – Numerology App
-A numerology simulation application built as part of the IT School graduation project.
+# Graduation Project – **Numerology API**
 
- Technologies Used
-- Java 21
-- Spring Boot 3.2+
-- Spring Data JPA
-- PostgreSQL
-- Maven
-- JUnit 5 & Mockito
-- Postman (for manual testing)
+A numerology simulation service developed as the final project for IT School.
 
- Key Features
-1. Calculates numerology numbers:
-- Destiny Number;
-- Soul Urge Number;
-- Personality Number;
-- Expression Number;
-- Maturity Number;
-- Birthday Number;
-- Lesson Number;
-- Balance Number;
-- Life Path Number;
-2. Retrieves meanings for each number from the database.
-3. Automatically saves users and generated profiles.
-4. Allows fetching all existing profiles.
+---
 
-Database Structure
-- users – stores user data (name, date of birth)
-- numerology_profile – stores calculated numerology numbers (linked to a user)
-- numerology_meaning – stores meanings for numbers 1–9 and master numbers
+## Technologies Used
+| Layer | Stack |
+|-------|-------|
+| Runtime | **Java 23**, **Spring Boot 3.4.4** |
+| Persistence | Spring Data JPA + **PostgreSQL 17** |
+| Build / CI | Maven, JUnit 5, Mockito |
+| Docs & Testing | springdoc-openapi (Swagger UI), Postman |
 
-Testing
-1. Includes unit tests for:
-- Core numerology calculations;
-- Meaning retrieval logic;
-2. Run tests:
-- bash: ./mvnw clean test
+---
 
-Possible Extensions
-- Add a frontend UI (e.g., React or Angular).
-- Export profile as PDF.
-- Track user history.
-- Add login/auth system (user/admin roles).
+## Key Features
+1. Calculates the full numerology profile
+    * Destiny, Life Path, Expression, Soul Urge, Personality, Birthday, Maturity, Balance, Lesson.
+2. Retrieves a description (meaning) for any number/type from DB.
+3. Persists **User** and **NumerologyProfile** automatically (cascade).
+4. CRUD endpoints to list, fetch or delete profiles.
 
-API Quick Demo
-- Swagger UI: http://localhost:8080/swagger-ui.html
-- API Docs: http://localhost:8080/v3/api-docs
-- Endpoints:
-1) POST: /api/profiles -> Create numerology profile
-2) GET: /api/users -> List all users
-3) GET: /api/profiles/meanings?number=6&type=DESTINY -> Get meaning for a number
+---
 
-Manual Database Reset (optional)
-If needed for testing purposes:
-- sql:
-```sql
-TRUNCATE TABLE numerology_profile, users CASCADE;
-ALTER SEQUENCE users_id_seq RESTART WITH 1;
-ALTER SEQUENCE numerology_profile_id_seq RESTART WITH 1;
+## Database Schema
+| Table | Purpose |
+|-------|---------|
+| `users` | first/last name & date-of-birth |
+| `numerology_profile` | all calculated numbers (FK → `users`) |
+| `numerology_meaning` | static meanings for 1-9, 11, 22, 33 |
+
+---
+
+## Testing
+* **Unit** tests for calculator & services
+* **Integration** test that boots the full Spring context & hits the API
+* Run everything:
+
+```bash
+./mvnw clean verify      # JDK 23

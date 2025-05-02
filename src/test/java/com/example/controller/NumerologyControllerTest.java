@@ -3,9 +3,10 @@ package com.example.controller;
 import com.example.dto.ProfileDto;
 import com.example.model.MeaningType;
 import com.example.service.MeaningService;
+import com.example.service.NumerologyService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
@@ -14,10 +15,20 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class NumerologyControllerTest {
+public class NumerologyControllerTest {
 
-    @Mock private MeaningService meaningService;
-    @InjectMocks private NumerologyController controller;
+    @Mock
+    private MeaningService meaningService;
+
+    @Mock
+    private NumerologyService numerologyService;
+
+    private NumerologyController controller;
+
+    @BeforeEach
+    void setUp() {
+        controller = new NumerologyController(numerologyService, meaningService);
+    }
 
     @Test
     void getMeaning_returnsProfileDto() {

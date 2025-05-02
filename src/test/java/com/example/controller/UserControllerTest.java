@@ -2,9 +2,9 @@ package com.example.controller;
 
 import com.example.dto.UserDto;
 import com.example.service.UserService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
@@ -16,13 +16,17 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class UserControllerTest {
+public class UserControllerTest {
 
     @Mock
     private UserService userService;
 
-    @InjectMocks
     private UserController controller;
+
+    @BeforeEach
+    void setUp() {
+        controller = new UserController(userService);
+    }
 
     @Test
     void getAllUsers_returnsList() {

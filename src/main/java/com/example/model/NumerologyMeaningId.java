@@ -19,18 +19,12 @@ public class NumerologyMeaningId implements Serializable {
     private int number;
     private MeaningType type;
 
-    public NumerologyMeaningId(int number, MeaningType type) {
-        this.number = number;
-        this.type = type;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof NumerologyMeaningId that)) return false;
         return number == that.number && Objects.equals(type, that.type);
     }
-
 
     @Override
     public int hashCode() {

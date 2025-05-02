@@ -11,14 +11,15 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class UserDtoValidationTest {
+public class UserDtoValidationTest {
 
     private Validator validator;
 
     @BeforeEach
     void setup() {
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        validator = factory.getValidator();
+        try (ValidatorFactory factory = Validation.buildDefaultValidatorFactory()) {
+            validator = factory.getValidator();
+        }
     }
 
     @Test

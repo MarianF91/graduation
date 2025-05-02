@@ -5,14 +5,15 @@ import lombok.*;
 
 @Entity
 @Table(name = "numerology_profile")
-@Getter @Setter
-@NoArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor //needed by JPA
 public class NumerologyProfile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(optional = false)
+    @OneToOne(optional = false, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "user_id", unique = true)
     private User user;
 

@@ -13,9 +13,10 @@ class ValidDateValidatorTest {
     private Validator validator;
 
     @BeforeEach
-    void setUp() {
-        ValidatorFactory vf = Validation.buildDefaultValidatorFactory();
-        validator = vf.getValidator();
+    void setup() {
+        try (ValidatorFactory factory = Validation.buildDefaultValidatorFactory()) {
+            validator = factory.getValidator();
+        }
     }
 
     @Test
