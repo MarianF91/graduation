@@ -1,6 +1,8 @@
 package com.example.model;
 
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serial;
@@ -9,9 +11,8 @@ import java.util.Objects;
 
 @Setter
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class NumerologyMeaningId implements Serializable {
-    public NumerologyMeaningId() {
-    }
 
     @Serial
     private static final long serialVersionUID = 1L;

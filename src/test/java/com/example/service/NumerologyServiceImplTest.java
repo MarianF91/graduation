@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class NumerologyServiceImplTest {
+class NumerologyServiceImplTest {
 
     @Mock private UserRepository userRepository;
     @Mock private ProfileRepository profileRepository;

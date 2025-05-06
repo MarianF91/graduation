@@ -3,11 +3,16 @@ package com.example.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+/**
+ * Entity which retains all the calculated numbers for a {@link User}.
+ * Owns the foreign key ( <code>user_id</code> ), thus, it's the
+ * "owning side" in the one-to-one relationship.
+ */
+
 @Entity
 @Table(name = "numerology_profile")
 @Getter
 @Setter
-@NoArgsConstructor //needed by JPA
 public class NumerologyProfile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

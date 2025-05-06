@@ -10,50 +10,56 @@ import com.example.model.User;
 import com.example.repository.ProfileRepository;
 import com.example.repository.UserRepository;
 import com.example.utils.NumerologyCalculator;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
-@Tag(name = "UserServiceImpl",
-        description = "Service class - manages the logic for creating, searching and deleting numerological profiles")
+/**
+ * Business-layer component which orchestrates all operations on the entity {@code NumerologyProfile}
+ * (create, search, delete)
+ *
+ * <p> Is used internally by the controllers. It does not expose HTTP endpoints directly.</p>
+ *
+ * @implNote <ul>
+ *   <li> The class is {@code @Transactional(readOnly = true)} – by default, all the operations are non-mutative
+ *       All the methods which write in the DB, override, at method level, with {@code readOnly = false}.</li>
+ *   <li> All the Entity ↔ DTO conversions are made through {@link NumerologyMapper} /
+ *       {@link UserMapper} in order to maintain a strict separation between layers.</li>
+ * </ul>
+ */
 @Service
 @RequiredArgsConstructor
-public class NumerologyServiceImpl implements NumerologyService {
+@Transactional(readOnly = true)
+class NumerologyServiceImpl implements NumerologyService {
 
-    // Injecting the 3 necessary components
-    private final UserRepository userRepository;
-    private final ProfileRepository profileRepository;
-    private final NumerologyMapper numerologyMapper;
+    private final UserRepository     userRepository;
+    private final ProfileRepository  profileRepository;
+    private final NumerologyMapper   numerologyMapper;
 
-    @Operation(summary = "Creates or returns a profile for a specific user")
+    /** Creates or returns a profile for a user from {@code dto}. */
     @Override
+    @Transactional
     public NumerologyProfileResponse calculateProfile(UserDto dto) {
-        // Checks if the user already exists
+
+        // 1.  Searches or saves a user
         User user = userRepository
                 .findByFirstNameAndLastNameAndBirthYearAndBirthMonthAndBirthDay(
                         dto.firstName(), dto.lastName(),
-                        dto.birthYear(), dto.birthMonth(), dto.birthDay()
-                )
-                // If it's not there, then it's saved in to the db
+                        dto.birthYear(), dto.birthMonth(), dto.birthDay())
                 .orElseGet(() -> userRepository.save(UserMapper.toEntity(dto)));
 
-        // Checks if the user has a numerological profile
+        // 2.  Searches or generates a profile
         NumerologyProfile profile = profileRepository.findByUser(user)
-                .orElseGet(() -> {
-                    // Creates a profile if it doesn't find one for the specified user
-                    NumerologyProfile newProfile = NumerologyCalculator.generateProfile(user);
-                    return profileRepository.save(newProfile);
-                });
+                .orElseGet(() -> profileRepository.save(
+                        NumerologyCalculator.generateProfile(user)));
 
-        // Converts the entity in to a DTO object
+        // 3.  Mapping towards DTO for a respons
         return numerologyMapper.toResponse(profile);
     }
 
-    @Operation(summary = "Returns a profile using its ID")
+    /** Returns a profile using its ID or throws {@link ProfileNotFoundException}. */
     @Override
     public NumerologyProfileResponse findProfile(Long id) {
         NumerologyProfile p = profileRepository.findById(id)
@@ -61,25 +67,27 @@ public class NumerologyServiceImpl implements NumerologyService {
         return numerologyMapper.toResponse(p);
     }
 
-    @Operation(summary = "Returns all the existing profiles as a DTO list")
+    /** Prints all existing profiles. */
     @Override
     public List<NumerologyProfileResponse> findAllProfiles() {
         return profileRepository.findAll().stream()
                 .map(numerologyMapper::toResponse)
-                .collect(Collectors.toList());
+                .toList();
     }
 
-    @Operation(summary = "Erases a profile using its ID")
+    /** Erases a profile using its ID. */
     @Override
+    @Transactional
     public void deleteProfile(Long id) {
         NumerologyProfile profile = profileRepository.findById(id)
                 .orElseThrow(() -> new ProfileNotFoundException("Profile not found: " + id));
         profileRepository.delete(profile);
     }
 
-    @Operation(summary = "Erases all profiles")
+    /** Deletes all the profiles in the db (bulk delete). */
     @Override
+    @Transactional
     public void deleteAllProfiles() {
-        profileRepository.findAll().forEach(profileRepository::delete);
+        profileRepository.deleteAllInBatch();
     }
 }
