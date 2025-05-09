@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @RequiredArgsConstructor
-class MeaningServiceImpl implements MeaningService {
+public class MeaningServiceImpl implements MeaningService {
 
     private final NumerologyMeaningRepository repo;
 

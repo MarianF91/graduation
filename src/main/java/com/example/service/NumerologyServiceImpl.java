@@ -32,7 +32,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-class NumerologyServiceImpl implements NumerologyService {
+public class NumerologyServiceImpl implements NumerologyService {
 
     private final UserRepository     userRepository;
     private final ProfileRepository  profileRepository;
