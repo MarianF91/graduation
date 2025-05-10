@@ -22,15 +22,18 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository repo;
 
-    /** Returns and saves a new {@link User}. */
+    /**
+     * Returns and saves a new {@link User}.
+     */
     @Override
-    @Transactional          // readOnly = false
     public UserDto createUser(UserDto dto) {
         User saved = repo.save(UserMapper.toEntity(dto));
         return UserMapper.toDto(saved);
     }
 
-    /** Returns all existing users. */
+    /**
+     * Returns all existing users.
+     */
     @Override
     public List<UserDto> findAllUsers() {
         return repo.findAll().stream()

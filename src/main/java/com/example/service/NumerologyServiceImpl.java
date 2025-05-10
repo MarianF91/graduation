@@ -40,7 +40,6 @@ public class NumerologyServiceImpl implements NumerologyService {
 
     /** Creates or returns a profile for a user from {@code dto}. */
     @Override
-    @Transactional
     public NumerologyProfileResponse calculateProfile(UserDto dto) {
 
         // 1.  Searches or saves a user
