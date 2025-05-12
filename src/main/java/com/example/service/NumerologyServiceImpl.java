@@ -54,7 +54,7 @@ public class NumerologyServiceImpl implements NumerologyService {
                 .orElseGet(() -> profileRepository.save(
                         NumerologyCalculator.generateProfile(user)));
 
-        // 3.  Mapping towards DTO for a respons
+        // 3.  Mapping towards DTO for a response
         return numerologyMapper.toResponse(profile);
     }
 

@@ -17,13 +17,13 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    /* Required columns */
+    /** Required columns */
     @Column(nullable = false)
     private String firstName;
     @Column(nullable = false)
     private String lastName;
 
-    /* Date-of-birth (kept split for easy calculations) */
+    /** Date-of-birth (kept split for easy calculations) */
     private int birthYear;
     private int birthMonth;
     private int birthDay;
@@ -43,7 +43,7 @@ public class User {
         this.birthDay = birthDay;
     }
 
-    /* One-to-one back reference; cascade removal handled în @OneToOne */
+    /** One-to-one back reference; cascade removal handled în @OneToOne */
     @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private NumerologyProfile profile;
 }
